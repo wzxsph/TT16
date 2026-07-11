@@ -62,7 +62,7 @@ const stabilityLabels = {
 
 const badgeIcons = [Flame, TrendingDown, Gauge, Sparkles, CircleGauge, Clipboard]
 
-const personalityImage = (typeCode: string) => `${import.meta.env.BASE_URL}images/personalities/${typeCode}.webp`
+const personalityImage = (typeCode: string) => `${import.meta.env.BASE_URL}images/personalities-v2/${typeCode}.webp`
 
 function chosenPercent(dimension: DimensionScore) {
   return dimension.chosenLetter === dimension.leftLetter

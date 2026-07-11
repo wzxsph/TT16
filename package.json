@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "assets:personalities": "node scripts/prepare-personality-assets.mjs",
+    "assets:personalities:v2": "node scripts/prepare-personality-assets.mjs --v2",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -3,9 +3,11 @@ import path from 'node:path'
 import sharp from 'sharp'
 
 const ROOT = process.cwd()
-const MASTER_DIR = path.join(ROOT, 'design/personality-masters')
-const WEB_DIR = path.join(ROOT, 'public/images/personalities')
-const CONTACT_SHEET = path.join(ROOT, 'design/personality-contact-sheet.jpg')
+const isV2 = process.argv.includes('--v2')
+const suffix = isV2 ? '-v2' : ''
+const MASTER_DIR = path.join(ROOT, `design/personality-masters${suffix}`)
+const WEB_DIR = path.join(ROOT, `public/images/personalities${suffix}`)
+const CONTACT_SHEET = path.join(ROOT, `design/personality-contact-sheet${suffix}.jpg`)
 
 const PERSONALITIES = [
   ['RHDP', '复利园丁'],
@@ -91,4 +93,4 @@ await sharp({
   .jpeg({ quality: 88, chromaSubsampling: '4:4:4' })
   .toFile(CONTACT_SHEET)
 
-console.log(`Prepared ${PERSONALITIES.length} WebP assets and ${CONTACT_SHEET}`)
+console.log(`Prepared ${PERSONALITIES.length} ${isV2 ? 'v2 ' : ''}WebP assets and ${CONTACT_SHEET}`)

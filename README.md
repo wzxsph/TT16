@@ -42,9 +42,11 @@ npm run deploy:pages
 - `src/data/profiles.ts`：16 型人格内容配置
 - `src/lib/scoring.ts`：纯函数评分、徽章与质量判断
 - `src/components/Illustrations.tsx`：原创内联 SVG 插画系统
-- `design/personality-masters/`：16 型人格插画 PNG 母版
-- `public/images/personalities/`：用于结果页和分享卡的 WebP 资产
-- `design/personality-contact-sheet.jpg`：16 型人格视觉总览
+- `design/personality-masters/`：v1 的 16 型人格插画 PNG 母版（保留备份）
+- `public/images/personalities/`：v1 页面 WebP 资产（保留备份）
+- `design/personality-masters-v2/`：以「复利园丁」为视觉锚点的 v2 PNG 母版
+- `public/images/personalities-v2/`：当前结果页和分享卡使用的 v2 WebP 资产
+- `design/personality-contact-sheet-v2.jpg`：v2 的 16 型人格视觉总览
 - `src/components/LandingPage.tsx`：品牌落地页
 - `src/components/QuizPage.tsx`：单题答题与键盘交互
 - `src/components/ResultPage.tsx`：完整结果报告与分享卡
