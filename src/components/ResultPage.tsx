@@ -24,7 +24,7 @@ import {
 } from 'lucide-react'
 import type { AssessmentScore, DimensionScore } from '../lib/scoring'
 import { downloadShareCard, type ShareDimension } from '../lib/shareCard'
-import { BrandMark, ResultIllustration, type IllustrationGroup } from './Illustrations'
+import { BrandMark, type IllustrationGroup } from './Illustrations'
 
 type ResultPageProps = {
   result: AssessmentScore
@@ -61,6 +61,8 @@ const stabilityLabels = {
 } as const
 
 const badgeIcons = [Flame, TrendingDown, Gauge, Sparkles, CircleGauge, Clipboard]
+
+const personalityImage = (typeCode: string) => `${import.meta.env.BASE_URL}images/personalities/${typeCode}.webp`
 
 function chosenPercent(dimension: DimensionScore) {
   return dimension.chosenLetter === dimension.leftLetter
@@ -107,6 +109,7 @@ function ShareDialog({
     group,
     dimensions,
     format,
+    imageUrl: personalityImage(result.typeCode),
   })
 
   const copyShareText = async () => {
@@ -140,7 +143,9 @@ function ShareDialog({
                 <h3>{result.profile.name}</h3>
                 <p>{result.profile.tagline}</p>
               </div>
-              <div className="share-preview__art"><ResultIllustration group={group} /></div>
+              <div className="share-preview__art">
+                <img src={personalityImage(result.typeCode)} alt="" />
+              </div>
               <div className="share-preview__bars">
                 {dimensions.map((dimension) => (
                   <div className="share-preview__bar" key={dimension.letter}>
@@ -226,7 +231,11 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
             </div>
           </div>
           <div className="result-hero__visual">
-            <ResultIllustration group={group} />
+            <img
+              className="personality-portrait"
+              src={personalityImage(result.typeCode)}
+              alt={`${result.profile.name}人格插画`}
+            />
             <div className="result-seal">TRADETYPE<br />16 · REPORT</div>
           </div>
         </div>

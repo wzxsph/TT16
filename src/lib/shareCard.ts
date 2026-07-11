@@ -11,6 +11,7 @@ type ShareCardInput = {
   group: 'RH' | 'RT' | 'SH' | 'ST'
   dimensions: ShareDimension[]
   format: 'square' | 'story'
+  imageUrl?: string
 }
 
 const palette = {
@@ -116,6 +117,28 @@ function drawCharacter(
   ctx.restore()
 }
 
+async function loadImage(url: string) {
+  const image = new Image()
+  image.decoding = 'async'
+  image.src = url
+  await image.decode()
+  return image
+}
+
+function drawPortrait(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  x: number,
+  y: number,
+  size: number,
+) {
+  ctx.save()
+  roundRect(ctx, x, y, size, size, size * 0.16)
+  ctx.clip()
+  ctx.drawImage(image, x, y, size, size)
+  ctx.restore()
+}
+
 export async function downloadShareCard(input: ShareCardInput) {
   const story = input.format === 'story'
   const width = 1080
@@ -163,14 +186,16 @@ export async function downloadShareCard(input: ShareCardInput) {
   const taglineY = top + (story ? 205 : 170)
   ctx.fillText(input.tagline.slice(0, 24), 88, taglineY)
 
-  drawCharacter(
-    ctx,
-    story ? 540 : 785,
-    story ? 830 : 450,
-    story ? 1.65 : 1.08,
-    colors.accent,
-    colors.second,
-  )
+  if (input.imageUrl) {
+    try {
+      const portrait = await loadImage(input.imageUrl)
+      drawPortrait(ctx, portrait, story ? 230 : 650, story ? 510 : 244, story ? 620 : 330)
+    } catch {
+      drawCharacter(ctx, story ? 540 : 785, story ? 830 : 450, story ? 1.65 : 1.08, colors.accent, colors.second)
+    }
+  } else {
+    drawCharacter(ctx, story ? 540 : 785, story ? 830 : 450, story ? 1.65 : 1.08, colors.accent, colors.second)
+  }
 
   const panelX = 70
   const panelY = story ? 1190 : 650
