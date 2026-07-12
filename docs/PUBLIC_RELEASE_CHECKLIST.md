@@ -23,7 +23,7 @@ This checklist records the repository gates that must pass before changing `wzxs
 - [x] `npm audit --audit-level=high` reports no vulnerabilities.
 - [x] Working-tree and Git-history pattern scans found no API keys, private keys, payment secrets, or recovery credentials.
 - [x] User-provided `参考图.png` remains untracked.
-- [ ] GitHub private vulnerability reporting is enabled immediately after the repository becomes Public.
+- [x] GitHub private vulnerability reporting is enabled.
 
 ## Maintainer decisions required
 
@@ -37,9 +37,9 @@ This checklist records the repository gates that must pass before changing `wzxs
 - [x] Repository description and Cloudflare sandbox homepage are current.
 - [x] Draft PR CI is green.
 - [x] Every file and commit reachable from the intended public refs has been scanned or explicitly approved by the maintainer.
-- [ ] Merge the release PR after the license and history decisions are complete.
-- [ ] Confirm GitHub Pages remains disabled.
-- [ ] Change repository visibility to Public.
-- [ ] Re-check README rendering, image loading, Issue forms, Security tab, demo URL, and CI from the public repository.
+- [x] Release PR was fast-forwarded into `main` after the license and history decisions were complete.
+- [x] GitHub Pages remains disabled.
+- [x] Repository visibility is Public.
+- [x] README rendering, image loading, community files, Security tab, demo URL, and CI were re-checked from the public repository.
 
-The repository must remain Private until every unchecked item above has been completed or explicitly accepted by the maintainer.
+Public release completed on 2026-07-12. The Cloudflare sandbox remains explicitly configured for Mock payment and must not be treated as a real-payment production service.
