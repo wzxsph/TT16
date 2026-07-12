@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, Cloud, X } from 'lucide-react'
-import type { Question } from '../data/questions'
+import type { CommercialQuestionView } from '../lib/api'
 import { BrandMark } from './Illustrations'
 
 type QuizPageProps = {
-  question: Question
+  question: CommercialQuestionView
   index: number
   total: number
   selected: number | null | undefined
@@ -59,7 +59,7 @@ export function QuizPage({
           <BrandMark size={34} />
           <span>TT16</span>
         </button>
-        <div className="quiz-save-state"><Cloud size={15} /><span>进度已保存在本机</span></div>
+        <div className="quiz-save-state"><Cloud size={15} /><span>进度已安全同步</span></div>
         <button className="icon-button" onClick={onExit} aria-label="关闭测试"><X size={20} /></button>
       </header>
 

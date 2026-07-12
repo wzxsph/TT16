@@ -1,0 +1,46 @@
+name: Commercial quality gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: commercial-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Production build
+        run: npm run build
+
+      - name: Worker typecheck
+        run: npm run typecheck:worker
+
+      - name: Scoring tests
+        run: npm test -- --run
+
+      - name: Commercial API acceptance
+        run: npm run test:api:commercial
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high

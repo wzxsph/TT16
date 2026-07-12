@@ -23,15 +23,24 @@ import {
   X,
 } from 'lucide-react'
 import type { AssessmentScore, DimensionScore } from '../lib/scoring'
+import type { CommercialAssessmentScore } from '../lib/commercialScoring'
 import { downloadShareCard, type ShareDimension } from '../lib/shareCard'
 import { BrandMark, type IllustrationGroup } from './Illustrations'
 
 type ResultPageProps = {
-  result: AssessmentScore
+  result: AssessmentScore | CommercialAssessmentScore
   onRestart: () => void
   onHome: () => void
   onAbout: () => void
+  onRecover?: () => void
+  onSupport?: () => void
+  onCardGenerate?: (format: 'square' | 'story') => void
+  onShareClick?: (target: 'native' | 'clipboard') => void
+  isSample?: boolean
+  onFeedback?: (value: 'like' | 'neutral' | 'unlike') => Promise<void> | void
 }
+
+type ResultData = AssessmentScore | CommercialAssessmentScore
 
 const groupCode: Record<AssessmentScore['profile']['group'], IllustrationGroup> = {
   企业复利族: 'RH',
@@ -75,11 +84,15 @@ function ShareDialog({
   onClose,
   result,
   group,
+  onCardGenerate,
+  onShareClick,
 }: {
   open: boolean
   onClose: () => void
-  result: AssessmentScore
+  result: ResultData
   group: IllustrationGroup
+  onCardGenerate?: (format: 'square' | 'story') => void
+  onShareClick?: (target: 'native' | 'clipboard') => void
 }) {
   const [format, setFormat] = useState<'square' | 'story'>('square')
   const [copied, setCopied] = useState(false)
@@ -102,27 +115,32 @@ function ShareDialog({
 
   if (!open) return null
 
-  const saveCard = () => downloadShareCard({
-    code: result.typeCode,
-    name: result.profile.name,
-    tagline: result.profile.tagline,
-    group,
-    dimensions,
-    format,
-    imageUrl: personalityImage(result.typeCode),
-  })
+  const saveCard = async () => {
+    await downloadShareCard({
+      code: result.typeCode,
+      name: result.profile.name,
+      tagline: result.profile.tagline,
+      group,
+      dimensions,
+      format,
+      imageUrl: personalityImage(result.typeCode),
+    })
+    onCardGenerate?.(format)
+  }
 
   const copyShareText = async () => {
     const text = `我的 TT16 是 ${result.typeCode} · ${result.profile.name}：${result.profile.tagline}。你是哪一种交易人格？`
     if (navigator.share) {
       try {
         await navigator.share({ title: `TT16 · ${result.profile.name}`, text, url: window.location.href })
+        onShareClick?.('native')
         return
       } catch {
         // The user can cancel the native share sheet; copying remains available.
       }
     }
     await navigator.clipboard?.writeText(`${text} ${window.location.href}`)
+    onShareClick?.('clipboard')
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1600)
   }
@@ -184,15 +202,22 @@ function ShareDialog({
   )
 }
 
-export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPageProps) {
+export function ResultPage({ result, onRestart, onHome, onAbout, onRecover, onSupport, onCardGenerate, onShareClick, isSample = false, onFeedback }: ResultPageProps) {
   const [shareOpen, setShareOpen] = useState(false)
   const [checkedRules, setCheckedRules] = useState<number[]>([])
   const [feedback, setFeedback] = useState<string | null>(null)
   const group = groupCode[result.profile.group]
   const topBadges = useMemo(
-    () => [...result.badges].sort((first, second) => second.score - first.score).slice(0, 3),
-    [result.badges],
+    () => 'badges' in result ? [...result.badges].sort((first, second) => second.score - first.score).slice(0, 3) : [],
+    [result],
   )
+
+  const qualityLabel = 'badges' in result ? qualityLabels[result.quality.level] : '商业报告已解锁'
+
+  const chooseFeedback = async (value: 'like' | 'neutral' | 'unlike') => {
+    setFeedback(value)
+    await onFeedback?.(value)
+  }
 
   const toggleRule = (index: number) => {
     setCheckedRules((current) => current.includes(index) ? current.filter((item) => item !== index) : [...current, index])
@@ -205,15 +230,18 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
           <BrandMark size={36} />
           <span className="brand-word">TT16</span>
           <span className="brand-divider" />
-          <span className="brand-subtitle">我的交易人格报告</span>
+          <span className="brand-subtitle">{isSample ? '公开示例报告' : '我的交易人格报告'}</span>
         </button>
         <div className="result-header__actions">
+          {onRecover && <button onClick={onRecover}>恢复 / 售后</button>}
+          {onSupport && <button onClick={onSupport}>提交工单</button>}
           <button onClick={onAbout}>模型说明</button>
           <button className="button button--dark button--compact" onClick={() => setShareOpen(true)}><Share2 size={16} />分享结果</button>
         </div>
       </header>
 
       <section className="result-hero-wrap shell">
+        {isSample && <div className="sample-report-banner"><Info size={15} />这是公开示例报告，不是你的测试结果。</div>}
         <div className="result-hero">
           <div className="result-hero__copy">
             <div className="result-kicker">你的 TT16 交易人格</div>
@@ -222,7 +250,7 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
             <p className="result-tagline">{result.profile.tagline}</p>
             <div className="result-chips">
               <span>{result.profile.group}</span>
-              <span>{qualityLabels[result.quality.level]}</span>
+              <span>{qualityLabel}</span>
               <span>{stabilityLabels[result.stability]}</span>
             </div>
             <div className="result-actions">
@@ -320,18 +348,32 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
             <p>徽章是行为提醒，不参与人格代码，也不是心理诊断。分数会在题库验证后继续校准。</p>
           </div>
           <div className="badge-grid">
-            {topBadges.map((badge, index) => {
-              const Icon = badgeIcons[index]
-              return (
-                <article className="risk-badge" key={badge.key}>
-                  <div className="risk-badge__top"><span className="risk-badge__icon"><Icon size={21} /></span><span className={`risk-level risk-level--${badge.level}`}>{badge.levelLabel}</span></div>
-                  <h3>{badge.name}</h3>
-                  <p>这个信号在近期压力或高波动情境中，可能比平时更明显。</p>
-                  <div className="risk-meter"><span style={{ width: `${badge.score}%` }} /></div>
-                  <div className="risk-advice"><Lightbulb size={12} /> {badge.advice}</div>
-                </article>
-              )
-            })}
+            {'badges' in result
+              ? topBadges.map((badge, index) => {
+                  const Icon = badgeIcons[index]
+                  return (
+                    <article className="risk-badge" key={badge.key}>
+                      <div className="risk-badge__top"><span className="risk-badge__icon"><Icon size={21} /></span><span className={`risk-level risk-level--${badge.level}`}>{badge.levelLabel}</span></div>
+                      <h3>{badge.name}</h3>
+                      <p>这个信号在近期压力或高波动情境中，可能比平时更明显。</p>
+                      <div className="risk-meter"><span style={{ width: `${badge.score}%` }} /></div>
+                      <div className="risk-advice"><Lightbulb size={12} /> {badge.advice}</div>
+                    </article>
+                  )
+                })
+              : result.pressure.map((item, index) => {
+                  const Icon = badgeIcons[index]
+                  const meter = item.score ?? 50
+                  return (
+                    <article className="risk-badge" key={item.key}>
+                      <div className="risk-badge__top"><span className="risk-badge__icon"><Icon size={21} /></span><span className={`risk-level risk-level--${item.level}`}>{item.label}</span></div>
+                      <h3>{item.name}</h3>
+                      <p>这个模块来自商业版压力场景题，不参与四字母人格代码。</p>
+                      <div className="risk-meter"><span style={{ width: `${meter}%` }} /></div>
+                      <div className="risk-advice"><Lightbulb size={12} /> {item.advice}</div>
+                    </article>
+                  )
+                })}
           </div>
         </section>
 
@@ -356,10 +398,10 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
         </section>
 
         <section className="feedback-panel">
-          <div><h3>{feedback ? '谢谢，你的感受已记在本机' : '这份结果像你吗？'}</h3><p>你的反馈会帮助我们继续校准题目与人格文案。</p></div>
+          <div><h3>{feedback ? '谢谢，你的反馈已记录' : '这份结果像你吗？'}</h3><p>你的反馈会帮助我们继续校准题目与人格文案。</p></div>
           <div className="feedback-options">
             {[['像我', 'like'], ['有一点', 'neutral'], ['不太像', 'unlike']].map(([label, value]) => (
-              <button key={value} className={feedback === value ? 'is-selected' : ''} onClick={() => setFeedback(value)}>{value === 'like' && <ThumbsUp size={13} />} {label}</button>
+              <button key={value} className={feedback === value ? 'is-selected' : ''} onClick={() => chooseFeedback(value as 'like' | 'neutral' | 'unlike')}>{value === 'like' && <ThumbsUp size={13} />} {label}</button>
             ))}
           </div>
         </section>
@@ -373,7 +415,14 @@ export function ResultPage({ result, onRestart, onHome, onAbout }: ResultPagePro
         </div>
       </div>
 
-      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} result={result} group={group} />
+      <ShareDialog
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        result={result}
+        group={group}
+        onCardGenerate={onCardGenerate}
+        onShareClick={onShareClick}
+      />
     </main>
   )
 }

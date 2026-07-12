@@ -1,18 +1,25 @@
 {
-  "name": "tt16-demo",
+  "name": "tt16-commercial",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:commercial": "npm run build && wrangler dev --config wrangler.commercial.jsonc --local",
     "build": "tsc -b && vite build",
+    "typecheck:worker": "tsc -p tsconfig.worker.json",
+    "db:migrate:local": "wrangler d1 migrations apply tt16-commercial --local --config wrangler.commercial.jsonc",
+    "db:migrate:sandbox": "wrangler d1 migrations apply tt16-commercial-sandbox --remote --config wrangler.sandbox.jsonc",
     "assets:personalities": "node scripts/prepare-personality-assets.mjs",
     "assets:personalities:v2": "node scripts/prepare-personality-assets.mjs --v2",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:api:commercial": "npm run db:migrate:local && node scripts/verify-commercial-api.mjs",
+    "test:api:sandbox": "COMMERCIAL_BASE_URL=https://tt16-commercial-sandbox.samsong-1a3.workers.dev node scripts/verify-commercial-api.mjs",
     "test:watch": "vitest",
-    "deploy": "npm run build && wrangler deploy",
-    "deploy:pages": "npm run build && wrangler pages deploy dist --project-name=tt16-demo"
+    "deploy:demo": "npm run build && wrangler deploy",
+    "deploy:sandbox": "npm run build && npm run db:migrate:sandbox && wrangler deploy --config wrangler.sandbox.jsonc",
+    "tail:sandbox": "wrangler tail tt16-commercial-sandbox --config wrangler.sandbox.jsonc"
   },
   "dependencies": {
     "lucide-react": "1.24.0",
@@ -20,6 +27,7 @@
     "react-dom": "19.2.7"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260711.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.3",

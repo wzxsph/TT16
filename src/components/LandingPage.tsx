@@ -16,10 +16,14 @@ import { BrandMark, HeroIllustration, MiniScene } from './Illustrations'
 type LandingPageProps = {
   hasProgress: boolean
   answeredCount: number
+  busy?: boolean
+  error?: string | null
   onStart: () => void
   onResume: () => void
   onPreview: () => void
   onAbout: () => void
+  onRecover: () => void
+  onSupport: () => void
 }
 
 const dimensions = [
@@ -91,10 +95,14 @@ const groups = [
 export function LandingPage({
   hasProgress,
   answeredCount,
+  busy = false,
+  error = null,
   onStart,
   onResume,
   onPreview,
   onAbout,
+  onRecover,
+  onSupport,
 }: LandingPageProps) {
   const scrollToModel = () => document.querySelector('#model')?.scrollIntoView({ behavior: 'smooth' })
 
@@ -109,6 +117,7 @@ export function LandingPage({
         </button>
         <nav className="site-nav" aria-label="主导航">
           <button onClick={scrollToModel}>认识模型</button>
+          <button onClick={onRecover}>恢复报告</button>
           <button onClick={onAbout}>关于 TT16</button>
           <button className="nav-cta" onClick={hasProgress ? onResume : onStart}>
             {hasProgress ? '继续测试' : '开始测试'}
@@ -122,7 +131,7 @@ export function LandingPage({
           <div className="hero-copy">
             <div className="eyebrow-pill">
               <Sparkles size={15} />
-              32 个真实交易情境 · 发现你的稳定倾向
+              20 个真实交易情境 · 发现你的稳定倾向
             </div>
             <h1>
               你是哪一种
@@ -132,20 +141,22 @@ export function LandingPage({
             <p className="hero-lead">
               你依靠什么形成判断，愿意等多久，如何使用仓位，又怎样执行计划？四个维度，组合出属于你的交易风格。
             </p>
+            <div className="commerce-note"><strong>测试免费完成</strong><span>完整结果与报告 ¥4.9</span><span>一次购买，不自动续费</span></div>
+            {error && <div className="landing-error" role="alert">{error}</div>}
             <div className="hero-actions">
-              <button className="button button--primary button--large" onClick={hasProgress ? onResume : onStart}>
-                {hasProgress ? `继续上次测试 · ${answeredCount}/32` : '开始认识自己'}
+              <button className="button button--primary button--large" onClick={hasProgress ? onResume : onStart} disabled={busy}>
+                {busy ? '正在创建安全会话…' : hasProgress ? `继续上次测试 · ${answeredCount}/20` : '开始认识自己'}
                 <ArrowRight size={19} />
               </button>
               <button className="text-button" onClick={onPreview}>
-                先看示例结果
+                先看示例报告
                 <span aria-hidden="true">↗</span>
               </button>
             </div>
             <ul className="trust-row" aria-label="测试说明">
-              <li><Clock3 />约 5–7 分钟</li>
+              <li><Clock3 />约 3–5 分钟</li>
               <li><LockKeyhole />无需注册</li>
-              <li><ShieldCheck />答案仅存本机</li>
+              <li><ShieldCheck />娱乐测试 · 非投资建议</li>
             </ul>
           </div>
           <div className="hero-visual">
@@ -250,10 +261,10 @@ export function LandingPage({
           <div className="cta-panel__copy">
             <p className="eyebrow">准备好了吗？</p>
             <h2>给自己的交易方式，做一次系统复盘。</h2>
-            <p>匿名、免费，不需要连接券商账户。</p>
+            <p>测试免费完成，完整报告 ¥4.9；不连接券商账户。</p>
           </div>
           <button className="button button--light button--large" onClick={onStart}>
-            开始 32 道情境题
+            开始 20 道情境题
             <ArrowRight size={19} />
           </button>
           <RefreshCcw className="cta-panel__deco" aria-hidden="true" />
@@ -268,8 +279,10 @@ export function LandingPage({
           </div>
           <p>结果仅供自我观察与娱乐，不构成投资建议、收益承诺或风险承受能力评估。</p>
           <div className="footer-links">
-            <button onClick={onAbout}>模型与隐私</button>
-            <span>Demo v0.1</span>
+            <button onClick={onRecover}>恢复报告</button>
+            <button onClick={onSupport}>售后与数据权利</button>
+            <button onClick={onAbout}>模型、隐私与售后</button>
+            <span>Commercial preview v1.1</span>
           </div>
         </div>
       </footer>

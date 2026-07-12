@@ -237,11 +237,11 @@ export async function downloadShareCard(input: ShareCardInput) {
     ctx.fillText('你的交易风格，也有自己的使用说明书。', 88, 1772)
     ctx.fillStyle = '#6f7a7d'
     ctx.font = '500 25px "Noto Sans SC", sans-serif'
-    ctx.fillText('tt16 · 32 个真实交易情境 · 匿名测试', 88, 1824)
+    ctx.fillText('tt16 · 20 个真实交易情境 · 匿名测试', 88, 1824)
   } else {
     ctx.fillStyle = '#6f7a7d'
     ctx.font = '500 22px "Noto Sans SC", sans-serif'
-    ctx.fillText('32 个真实交易情境 · 匿名测试', 704, 1032)
+    ctx.fillText('20 个真实交易情境 · 匿名测试', 704, 1032)
   }
 
   const dataUrl = canvas.toDataURL('image/png', 1)
