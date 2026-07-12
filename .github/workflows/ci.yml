@@ -42,5 +42,11 @@ jobs:
       - name: Commercial API acceptance
         run: npm run test:api:commercial
 
+      - name: Build GitHub Pages free edition
+        run: npm run build:pages
+
+      - name: Verify payment-free Pages artifact
+        run: npm run test:pages-build
+
       - name: Dependency audit
         run: npm audit --audit-level=high

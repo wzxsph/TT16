@@ -25,7 +25,12 @@ import {
 } from 'lucide-react'
 import type { AssessmentScore, DimensionScore } from '../lib/scoring'
 import type { CommercialAssessmentScore } from '../lib/commercialScoring'
-import { downloadShareCard, type ShareDimension } from '../lib/shareCard'
+import {
+  downloadShareCard,
+  renderShareCard,
+  type ShareCardInput,
+  type ShareDimension,
+} from '../lib/shareCard'
 import { SOURCE_REPOSITORY_URL } from '../lib/project'
 import { BrandMark, type IllustrationGroup } from './Illustrations'
 
@@ -39,6 +44,7 @@ type ResultPageProps = {
   onCardGenerate?: (format: 'square' | 'story') => void
   onShareClick?: (target: 'native' | 'clipboard') => void
   isSample?: boolean
+  reportLabel?: string
   onFeedback?: (value: 'like' | 'neutral' | 'unlike') => Promise<void> | void
 }
 
@@ -98,11 +104,21 @@ function ShareDialog({
 }) {
   const [format, setFormat] = useState<'square' | 'story'>('square')
   const [copied, setCopied] = useState(false)
-  const dimensions: ShareDimension[] = result.dimensions.map((dimension) => ({
+  const [previewUrl, setPreviewUrl] = useState('')
+  const dimensions: ShareDimension[] = useMemo(() => result.dimensions.map((dimension) => ({
     letter: dimension.chosenLetter,
     label: dimensionMeta[dimension.key][dimension.chosenLetter === dimension.leftLetter ? 'left' : 'right'],
     percent: chosenPercent(dimension),
-  }))
+  })), [result.dimensions])
+  const cardInput = useMemo<ShareCardInput>(() => ({
+    code: result.typeCode,
+    name: result.profile.name,
+    tagline: result.profile.tagline,
+    group,
+    dimensions,
+    format,
+    imageUrl: personalityImage(result.typeCode),
+  }), [dimensions, format, group, result.profile.name, result.profile.tagline, result.typeCode])
 
   useEffect(() => {
     if (!open) return
@@ -115,18 +131,22 @@ function ShareDialog({
     }
   }, [onClose, open])
 
+  useEffect(() => {
+    if (!open) return
+    let active = true
+    setPreviewUrl('')
+    void renderShareCard(cardInput).then((canvas) => {
+      if (active && canvas) setPreviewUrl(canvas.toDataURL('image/png', 1))
+    })
+    return () => {
+      active = false
+    }
+  }, [cardInput, open])
+
   if (!open) return null
 
   const saveCard = async () => {
-    await downloadShareCard({
-      code: result.typeCode,
-      name: result.profile.name,
-      tagline: result.profile.tagline,
-      group,
-      dimensions,
-      format,
-      imageUrl: personalityImage(result.typeCode),
-    })
+    await downloadShareCard(cardInput)
     onCardGenerate?.(format)
   }
 
@@ -156,26 +176,15 @@ function ShareDialog({
         </header>
         <div className="share-dialog__body">
           <div className="share-preview-wrap">
-            <div className={`share-preview share-preview--${format}`} data-group={group}>
-              <div className="share-preview__brand"><BrandMark size={17} />TT16 · 交易人格</div>
-              <div className="share-preview__content">
-                <strong>{result.typeCode}</strong>
-                <h3>{result.profile.name}</h3>
-                <p>{result.profile.tagline}</p>
-              </div>
-              <div className="share-preview__art">
-                <img src={personalityImage(result.typeCode)} alt="" />
-              </div>
-              <div className="share-preview__bars">
-                {dimensions.map((dimension) => (
-                  <div className="share-preview__bar" key={dimension.letter}>
-                    <b>{dimension.letter}</b>
-                    <i><span style={{ width: `${dimension.percent}%` }} /></i>
-                    <em>{dimension.percent}%</em>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {previewUrl ? (
+              <img
+                className={`share-preview-image share-preview-image--${format}`}
+                src={previewUrl}
+                alt={`${result.profile.name} ${format === 'square' ? '方形' : '故事'}人格卡高清预览`}
+              />
+            ) : (
+              <div className="share-preview-loading" role="status">正在绘制高清人格卡…</div>
+            )}
           </div>
           <div className="share-controls">
             <p className="eyebrow">SHARE YOUR TYPE</p>
@@ -204,7 +213,7 @@ function ShareDialog({
   )
 }
 
-export function ResultPage({ result, onRestart, onHome, onAbout, onRecover, onSupport, onCardGenerate, onShareClick, isSample = false, onFeedback }: ResultPageProps) {
+export function ResultPage({ result, onRestart, onHome, onAbout, onRecover, onSupport, onCardGenerate, onShareClick, isSample = false, reportLabel, onFeedback }: ResultPageProps) {
   const [shareOpen, setShareOpen] = useState(false)
   const [checkedRules, setCheckedRules] = useState<number[]>([])
   const [feedback, setFeedback] = useState<string | null>(null)
@@ -214,7 +223,7 @@ export function ResultPage({ result, onRestart, onHome, onAbout, onRecover, onSu
     [result],
   )
 
-  const qualityLabel = 'badges' in result ? qualityLabels[result.quality.level] : '商业报告已解锁'
+  const qualityLabel = reportLabel ?? ('badges' in result ? qualityLabels[result.quality.level] : '商业报告已解锁')
 
   const chooseFeedback = async (value: 'like' | 'neutral' | 'unlike') => {
     setFeedback(value)

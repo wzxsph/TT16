@@ -4,9 +4,9 @@
 
 **交易人格十六型：把真实交易选择，整理成一张可复盘的决策地图。**
 
-[在线体验](https://tt16-commercial-sandbox.samsong-1a3.workers.dev) · [参与贡献](CONTRIBUTING.md) · [安全策略](SECURITY.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
+[GitHub Pages 免费体验](https://wzxsph.github.io/TT16/) · [参与贡献](CONTRIBUTING.md) · [安全策略](SECURITY.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
 
-> 当前在线版本使用 Mock 沙盒支付，不会产生真实扣款；结果仅用于自我观察与娱乐，不构成投资建议。
+> GitHub Pages 版 20 题和完整报告全部免费，纯静态运行，答案仅在当前浏览器评分，没有支付、订单或解锁流程。
 
 </div>
 
@@ -29,38 +29,30 @@ TT16 是一个开源、移动端优先的交易行为人格项目。用户回答
 
 ## 在线体验
 
-**Cloudflare 商业沙盒：** [tt16-commercial-sandbox.samsong-1a3.workers.dev](https://tt16-commercial-sandbox.samsong-1a3.workers.dev)
+**免费静态版：** [wzxsph.github.io/TT16](https://wzxsph.github.io/TT16/)
 
 - 测试约 3–5 分钟，无需注册，不连接券商账户；
-- 20 题免费完成，当前解锁流程为 Mock 模拟支付；
-- 页面会明确显示沙盒提示，点击模拟确认不会产生真实扣款；
-- 在线数据仅用于演示，请勿输入个人信息、真实订单或任何密钥。
+- 20 题与完整报告全部免费，没有付费墙和支付界面；
+- 答案、评分和进度只保存在当前浏览器，不调用后端 API；
+- 人格卡在浏览器本地绘制，可导出 1:1 与 9:16 高清图片。
 
-## 真实体验截图
+**Cloudflare 商业架构沙盒：** [tt16-commercial-sandbox.samsong-1a3.workers.dev](https://tt16-commercial-sandbox.samsong-1a3.workers.dev)
 
-以下图片全部截取自当前 Cloudflare 在线沙盒，不是设计稿或静态重绘。
+该地址保留 Worker、D1、订单和 Mock 支付适配层，仅用于公开展示商业架构；不会产生真实扣款。
 
-![TT16 在线首页](docs/images/tt16-landing-hero.jpg)
+## 16 种交易人格
 
-| 回答真实情境 | 结果生成前的中性付费墙 |
+第二版人格插画使用统一的低多边形语言、更简洁的主题道具与适中头身比，保留每一类型的独立识别度。
+
+![TT16 第二版 16 种交易人格插画](docs/images/tt16-personality-types-v2.jpg)
+
+## 最终人格卡
+
+人格卡预览和下载现在共用同一个 Canvas 绘制器，不再出现“预览完整、导出裁切”的差异。人物插画使用完整适配，长副标题自动换行，姓名、人格代码与四维数值都保留在安全区内。下图是当前程序实际生成的「复利园丁」卡片：
+
+| 1:1 方形卡 | 9:16 故事卡 |
 | --- | --- |
-| ![TT16 答题页](docs/images/tt16-quiz.jpg) | ![TT16 付费墙](docs/images/tt16-paywall.jpg) |
-
-![TT16 复利园丁报告首页](docs/images/tt16-report-hero.jpg)
-
-<details>
-<summary>展开查看完整首页长截图</summary>
-
-![TT16 完整首页](docs/images/tt16-landing-full.jpg)
-
-</details>
-
-<details>
-<summary>展开查看完整人格报告长截图</summary>
-
-![TT16 完整人格报告](docs/images/tt16-report-full.jpg)
-
-</details>
+| <img src="docs/images/tt16-final-card-square.png" alt="TT16 复利园丁方形人格卡" width="520"> | <img src="docs/images/tt16-final-card-story.png" alt="TT16 复利园丁故事人格卡" width="292"> |
 
 ## 为什么做这个项目？
 
@@ -76,6 +68,7 @@ TT16 坚持几条产品原则：
 
 ## 已实现能力
 
+- GitHub Pages 免费静态版：本地评分、完整报告，不包含 API、订单或支付运行时；
 - 20 道版本化商业题库、四维计分、质量门与 16 型报告快照；
 - Cloudflare Worker 服务端评分，前端无法自行指定分数或人格类型；
 - 匿名 session、逐题同步、刷新恢复和订单凭证恢复；
@@ -118,6 +111,8 @@ npm run dev:commercial
 
 ```bash
 npm run build
+npm run build:pages
+npm run test:pages-build
 npm run typecheck:worker
 npm test -- --run
 npm run test:api:commercial
@@ -132,7 +127,7 @@ worker/index.ts              Cloudflare Worker 商业 API
 migrations/                  D1 顺序迁移
 public/images/               线上使用的 16 型 WebP 插画
 design/personality-masters/  人格插画 PNG 母版与设计资产
-docs/images/                 README 宣传图与真实体验截图
+docs/images/                 README 宣传图、16 型总览与真实人格卡
 scripts/                     资产处理与 API 验收脚本
 ops/                         沙盒发布、监控与运维材料
 prd/                         产品需求文档

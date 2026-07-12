@@ -16,6 +16,7 @@ import { BrandMark, HeroIllustration, MiniScene } from './Illustrations'
 import { SOURCE_REPOSITORY_URL } from '../lib/project'
 
 type LandingPageProps = {
+  freeMode?: boolean
   hasProgress: boolean
   answeredCount: number
   busy?: boolean
@@ -95,6 +96,7 @@ const groups = [
 ]
 
 export function LandingPage({
+  freeMode = false,
   hasProgress,
   answeredCount,
   busy = false,
@@ -119,7 +121,7 @@ export function LandingPage({
         </button>
         <nav className="site-nav" aria-label="主导航">
           <button onClick={scrollToModel}>认识模型</button>
-          <button onClick={onRecover}>恢复报告</button>
+          {!freeMode && <button onClick={onRecover}>恢复报告</button>}
           <button onClick={onAbout}>关于 TT16</button>
           <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer"><GitBranch size={15} />开源源码</a>
           <button className="nav-cta" onClick={hasProgress ? onResume : onStart}>
@@ -144,7 +146,11 @@ export function LandingPage({
             <p className="hero-lead">
               你依靠什么形成判断，愿意等多久，如何使用仓位，又怎样执行计划？四个维度，组合出属于你的交易风格。
             </p>
-            <div className="commerce-note"><strong>测试免费完成</strong><span>完整结果与报告 ¥4.9</span><span>一次购买，不自动续费</span></div>
+            <div className="commerce-note">
+              <strong>{freeMode ? '完整体验免费' : '测试免费完成'}</strong>
+              <span>{freeMode ? '完成后直接查看完整报告' : '完整结果与报告 ¥4.9'}</span>
+              <span>{freeMode ? '纯静态运行 · 无支付流程' : '一次购买，不自动续费'}</span>
+            </div>
             {error && <div className="landing-error" role="alert">{error}</div>}
             <div className="hero-actions">
               <button className="button button--primary button--large" onClick={hasProgress ? onResume : onStart} disabled={busy}>
@@ -264,7 +270,7 @@ export function LandingPage({
           <div className="cta-panel__copy">
             <p className="eyebrow">准备好了吗？</p>
             <h2>给自己的交易方式，做一次系统复盘。</h2>
-            <p>测试免费完成，完整报告 ¥4.9；不连接券商账户。</p>
+            <p>{freeMode ? '20 题与完整报告全部免费；不上传答案，不连接券商账户。' : '测试免费完成，完整报告 ¥4.9；不连接券商账户。'}</p>
           </div>
           <button className="button button--light button--large" onClick={onStart}>
             开始 20 道情境题
@@ -282,11 +288,11 @@ export function LandingPage({
           </div>
           <p>结果仅供自我观察与娱乐，不构成投资建议、收益承诺或风险承受能力评估。</p>
           <div className="footer-links">
-            <button onClick={onRecover}>恢复报告</button>
-            <button onClick={onSupport}>售后与数据权利</button>
-            <button onClick={onAbout}>模型、隐私与售后</button>
+            {!freeMode && <button onClick={onRecover}>恢复报告</button>}
+            {!freeMode && <button onClick={onSupport}>售后与数据权利</button>}
+            <button onClick={onAbout}>{freeMode ? '模型、隐私与开源' : '模型、隐私与售后'}</button>
             <a href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer">AGPL-3.0 源码</a>
-            <span>Commercial preview v1.1</span>
+            <span>{freeMode ? 'GitHub Pages · Free edition' : 'Commercial preview v1.1'}</span>
           </div>
         </div>
       </footer>
