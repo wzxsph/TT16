@@ -9,6 +9,7 @@ import {
   Download,
   Flame,
   Gauge,
+  GitBranch,
   Info,
   Lightbulb,
   LockKeyhole,
@@ -25,6 +26,7 @@ import {
 import type { AssessmentScore, DimensionScore } from '../lib/scoring'
 import type { CommercialAssessmentScore } from '../lib/commercialScoring'
 import { downloadShareCard, type ShareDimension } from '../lib/shareCard'
+import { SOURCE_REPOSITORY_URL } from '../lib/project'
 import { BrandMark, type IllustrationGroup } from './Illustrations'
 
 type ResultPageProps = {
@@ -236,6 +238,7 @@ export function ResultPage({ result, onRestart, onHome, onAbout, onRecover, onSu
           {onRecover && <button onClick={onRecover}>恢复 / 售后</button>}
           {onSupport && <button onClick={onSupport}>提交工单</button>}
           <button onClick={onAbout}>模型说明</button>
+          <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer" aria-label="查看源代码"><GitBranch size={15} /><span>源代码</span></a>
           <button className="button button--dark button--compact" onClick={() => setShareOpen(true)}><Share2 size={16} />分享结果</button>
         </div>
       </header>

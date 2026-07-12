@@ -1,5 +1,6 @@
-import { Check, ChevronLeft, Copy, CreditCard, FileText, LockKeyhole, RotateCcw, ShieldCheck, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, Copy, CreditCard, FileText, GitBranch, LockKeyhole, RotateCcw, ShieldCheck, Sparkles } from 'lucide-react'
 import type { OrderPayload, PaywallPayload } from '../lib/api'
+import { SOURCE_REPOSITORY_URL } from '../lib/project'
 import { BrandMark } from './Illustrations'
 
 type PaywallPageProps = {
@@ -42,7 +43,10 @@ export function PaywallPage({
           <span className="brand-divider" />
           <span className="brand-subtitle">报告已生成</span>
         </button>
-        <button onClick={onAbout}>购买与隐私说明</button>
+        <div className="result-header__actions">
+          <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer" aria-label="查看开源源码"><GitBranch size={15} /><span>开源源码</span></a>
+          <button onClick={onAbout}>购买与隐私说明</button>
+        </div>
       </header>
 
       <section className="paywall-shell shell">

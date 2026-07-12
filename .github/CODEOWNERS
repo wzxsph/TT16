@@ -1,0 +1,17 @@
+# Default maintainer review for all repository changes.
+* @wzxsph
+
+# Security- and commerce-critical boundaries.
+/worker/ @wzxsph
+/migrations/ @wzxsph
+/src/lib/commercialScoring.ts @wzxsph
+/src/lib/paymentPolicy.ts @wzxsph
+/src/lib/api.ts @wzxsph
+/scripts/verify-commercial-api.mjs @wzxsph
+/wrangler*.jsonc @wzxsph
+
+# Community, security, licensing, and release policy.
+/.github/ @wzxsph
+/AGENTS.md @wzxsph
+/SECURITY.md @wzxsph
+/LICENSE @wzxsph

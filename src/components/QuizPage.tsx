@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { ArrowLeft, ArrowRight, Check, ChevronLeft, Cloud, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronLeft, Cloud, GitBranch, X } from 'lucide-react'
 import type { CommercialQuestionView } from '../lib/api'
+import { SOURCE_REPOSITORY_URL } from '../lib/project'
 import { BrandMark } from './Illustrations'
 
 type QuizPageProps = {
@@ -60,7 +61,10 @@ export function QuizPage({
           <span>TT16</span>
         </button>
         <div className="quiz-save-state"><Cloud size={15} /><span>进度已安全同步</span></div>
-        <button className="icon-button" onClick={onExit} aria-label="关闭测试"><X size={20} /></button>
+        <div className="quiz-header__actions">
+          <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer"><GitBranch size={15} /><span>源码</span></a>
+          <button className="icon-button" onClick={onExit} aria-label="关闭测试"><X size={20} /></button>
+        </div>
       </header>
 
       <div className="quiz-progress" aria-label={`第 ${index + 1} 题，共 ${total} 题`}>

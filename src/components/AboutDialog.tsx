@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { Building2, Database, Eye, ReceiptText, Scale, ShieldCheck, X } from 'lucide-react'
+import { Building2, Code2, Database, Eye, ReceiptText, Scale, ShieldCheck, X } from 'lucide-react'
 import { BrandMark } from './Illustrations'
+import { SOURCE_REPOSITORY_URL } from '../lib/project'
 
 type AboutDialogProps = {
   open: boolean
@@ -40,6 +41,7 @@ export function AboutDialog({ open, onClose }: AboutDialogProps) {
             <article><ShieldCheck /><div><h3>不构成投资建议</h3><p>结果仅供自我观察与娱乐，不提供股票、行业、仓位比例或收益预测。</p></div></article>
             <article><ReceiptText /><div><h3>一次购买与数字交付</h3><p>完整报告标价 ¥4.9，一次购买、不自动续费。支付成功后立即交付当前版本报告；重复扣款或交付失败可提交售后处理。</p></div></article>
             <article><Building2 /><div><h3>当前为沙盒内测</h3><p>当前环境仅支持模拟支付，不会产生真实扣款。正式经营主体、支付商户、客服渠道和服务时间确认前，不会开放真实收费。</p></div></article>
+            <article><Code2 /><div><h3>AGPL-3.0 开源</h3><p>TT16 的对应源码可在 <a href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer">GitHub 仓库</a>获取、审阅与修改。</p></div></article>
           </div>
 
           <div className="about-notice">
@@ -47,7 +49,7 @@ export function AboutDialog({ open, onClose }: AboutDialogProps) {
             <p>你可以使用订单号和高熵恢复凭证找回已购报告。数据查询、更正、删除、撤回和退款请求将在正式客服入口中受理；账务、反欺诈和法定义务所需记录可能依法保留。TT16 与 MBTI、Myers-Briggs、券商及交易所均无关联，也未宣称心理测量认证或收益改善效果。</p>
           </div>
         </div>
-        <footer className="dialog-footer"><span>评估版本：tt16-commercial-1.1.0 · 内测政策 v1.0</span><button className="button button--dark button--compact" onClick={onClose}>我知道了</button></footer>
+        <footer className="dialog-footer"><span>评估版本：tt16-commercial-1.1.0 · AGPL-3.0-only</span><button className="button button--dark button--compact" onClick={onClose}>我知道了</button></footer>
       </section>
     </div>
   )

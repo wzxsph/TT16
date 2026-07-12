@@ -130,7 +130,8 @@ button:disabled {
   gap: 6px;
 }
 
-.site-nav > button {
+.site-nav > button,
+.site-nav > .source-link {
   min-height: 42px;
   padding: 0 14px;
   border: 0;
@@ -139,9 +140,11 @@ button:disabled {
   color: #536166;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.site-nav > button:hover {
+.site-nav > button:hover,
+.site-nav > .source-link:hover {
   color: var(--ink);
   background: rgba(255, 255, 255, 0.55);
 }
@@ -846,6 +849,15 @@ button:disabled {
   cursor: pointer;
 }
 
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--ink);
+}
+
 /* Quiz */
 .quiz-screen {
   min-height: 100vh;
@@ -892,6 +904,32 @@ button:disabled {
 
 .icon-button:hover {
   background: rgba(38, 52, 58, 0.06);
+}
+
+.quiz-header__actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.source-link {
+  min-height: 42px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 9px;
+  color: #647174;
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.source-link:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.58);
 }
 
 .quiz-header > .icon-button {
@@ -1321,7 +1359,8 @@ kbd {
   gap: 6px;
 }
 
-.result-header__actions > button:not(.button) {
+.result-header__actions > button:not(.button),
+.result-header__actions > .source-link {
   min-height: 42px;
   padding: 0 12px;
   border: 0;
@@ -1331,6 +1370,7 @@ kbd {
   font-size: 13px;
   font-weight: 650;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .result-hero-wrap {
@@ -2822,7 +2862,7 @@ kbd {
     width: min(100% - 36px, 680px);
   }
 
-  .site-nav > button:not(.nav-cta) {
+  .site-nav > :not(.nav-cta) {
     display: none;
   }
 
@@ -3108,6 +3148,16 @@ kbd {
     display: none;
   }
 
+  .quiz-header__actions .source-link span {
+    display: none;
+  }
+
+  .quiz-header__actions .source-link {
+    width: 38px;
+    min-height: 38px;
+    padding: 0;
+  }
+
   .quiz-stage {
     width: calc(100% - 24px);
     padding-top: 17px;
@@ -3227,6 +3277,16 @@ kbd {
   }
 
   .result-header__actions > button:not(.button) {
+    display: none;
+  }
+
+  .result-header__actions > .source-link {
+    width: 38px;
+    min-height: 38px;
+    padding: 0;
+  }
+
+  .result-header__actions > .source-link span {
     display: none;
   }
 

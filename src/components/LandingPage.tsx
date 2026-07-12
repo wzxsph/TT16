@@ -5,6 +5,7 @@ import {
   Clock3,
   Compass,
   Fingerprint,
+  GitBranch,
   LockKeyhole,
   MousePointer2,
   RefreshCcw,
@@ -12,6 +13,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { BrandMark, HeroIllustration, MiniScene } from './Illustrations'
+import { SOURCE_REPOSITORY_URL } from '../lib/project'
 
 type LandingPageProps = {
   hasProgress: boolean
@@ -119,6 +121,7 @@ export function LandingPage({
           <button onClick={scrollToModel}>认识模型</button>
           <button onClick={onRecover}>恢复报告</button>
           <button onClick={onAbout}>关于 TT16</button>
+          <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer"><GitBranch size={15} />开源源码</a>
           <button className="nav-cta" onClick={hasProgress ? onResume : onStart}>
             {hasProgress ? '继续测试' : '开始测试'}
             <ArrowRight size={16} />
@@ -282,6 +285,7 @@ export function LandingPage({
             <button onClick={onRecover}>恢复报告</button>
             <button onClick={onSupport}>售后与数据权利</button>
             <button onClick={onAbout}>模型、隐私与售后</button>
+            <a href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer">AGPL-3.0 源码</a>
             <span>Commercial preview v1.1</span>
           </div>
         </div>

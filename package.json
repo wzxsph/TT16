@@ -2,6 +2,7 @@
   "name": "tt16-commercial",
   "private": true,
   "version": "1.1.0",
+  "license": "AGPL-3.0-only",
   "description": "Open-source trading-behavior personality experience built on Cloudflare Workers and D1.",
   "homepage": "https://tt16-commercial-sandbox.samsong-1a3.workers.dev",
   "repository": {

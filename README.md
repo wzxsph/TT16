@@ -165,7 +165,7 @@ npm run deploy:sandbox
 
 ## 许可证
 
-维护者拟采用 **GNU Affero General Public License v3.0 only（AGPL-3.0-only）**：允许商用和修改，同时要求分发版本以及通过网络向用户提供的修改版公开对应源码。正式 `LICENSE` 将在维护者确认版权署名后加入；在此之前，请勿假定仓库内容已经获得开源许可授权。
+本项目由 `wzxsph` 以 [GNU Affero General Public License v3.0 only](LICENSE)（`AGPL-3.0-only`）发布。你可以商用、修改和再分发；分发修改版或通过网络向用户提供修改版服务时，必须按许可证向相应用户提供对应源码。第三方依赖仍遵循各自许可证，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 免责声明
 

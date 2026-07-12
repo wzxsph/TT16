@@ -24,4 +24,4 @@ The complete transitive dependency graph and exact versions are recorded in `pac
 
 ## Project artwork and content
 
-TT16 personality illustrations, screenshots, project copy, and other repository-authored assets will follow the repository license once the maintainer finalizes and adds `LICENSE`. User-provided references or third-party materials are not included unless their publication rights are explicitly confirmed.
+TT16 personality illustrations, screenshots, project copy, and other repository-authored assets are released under the repository's `AGPL-3.0-only` license unless a file says otherwise. User-provided references or third-party materials are not included unless their publication rights are explicitly confirmed.

@@ -11,6 +11,8 @@ This checklist records the repository gates that must pass before changing `wzxs
 - [x] Mock payment and non-investment-advice disclosures are prominent.
 - [x] `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `AGENTS.md`, PR template, and Issue templates exist.
 - [x] Third-party dependency licenses are summarized in `THIRD_PARTY_NOTICES.md`.
+- [x] `CODEOWNERS` protects scoring, Worker, migration, payment, security, and license boundaries.
+- [x] Dependabot is configured for npm and GitHub Actions updates.
 
 ## Code and security
 
@@ -25,10 +27,10 @@ This checklist records the repository gates that must pass before changing `wzxs
 
 ## Maintainer decisions required
 
-- [ ] Confirm `AGPL-3.0-only` and the copyright-holder display name.
-- [ ] Add the exact unmodified license text and SPDX metadata.
-- [ ] Decide whether internal business plans and acquisition/financial assumptions belong in public history.
-- [ ] Decide whether to rewrite historical author email addresses to the GitHub noreply address.
+- [x] `AGPL-3.0-only` confirmed with copyright holder `wzxsph`.
+- [x] Exact unmodified GNU AGPL v3 text, SPDX package metadata, and project notice added.
+- [x] Maintainer explicitly approved publishing business plans and acquisition/financial assumptions.
+- [x] Maintainer selected the author/committer email to use for the rewritten Git history.
 
 ## GitHub release gate
 
