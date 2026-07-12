@@ -4,7 +4,7 @@
 
 **交易人格十六型：把真实交易选择，整理成一张可复盘的决策地图。**
 
-[在线体验](https://tt16-commercial-sandbox.samsong-1a3.workers.dev) · [参与贡献](CONTRIBUTING.md) · [安全策略](SECURITY.md)
+[在线体验](https://tt16-commercial-sandbox.samsong-1a3.workers.dev) · [参与贡献](CONTRIBUTING.md) · [安全策略](SECURITY.md) · [第三方声明](THIRD_PARTY_NOTICES.md)
 
 > 当前在线版本使用 Mock 沙盒支付，不会产生真实扣款；结果仅用于自我观察与娱乐，不构成投资建议。
 
@@ -151,7 +151,7 @@ npm run deploy:sandbox
 
 ## 参与贡献
 
-欢迎参与题目设计、内容校准、可访问性、视觉、测试、Cloudflare 工程和文档工作。请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)；安全问题不要创建公开 Issue，请按 [SECURITY.md](SECURITY.md) 私下报告。
+欢迎参与题目设计、内容校准、可访问性、视觉、测试、Cloudflare 工程和文档工作。请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，再从 [Issue 模板](https://github.com/wzxsph/TT16/issues/new/choose) 选择合适入口；安全问题不要创建公开 Issue，请按 [SECURITY.md](SECURITY.md) 私下报告。
 
 贡献时请特别保护三条边界：付费前不泄露结果、评分与价格以 Worker 为准、任何页面都不得暗示收益或提供投资建议。
 

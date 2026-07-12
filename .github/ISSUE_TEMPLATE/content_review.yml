@@ -1,0 +1,59 @@
+name: 题目 / 人格内容校准
+description: 提议修改题目、维度、人格称号、报告或免责声明
+title: "[Content]: "
+labels:
+  - content
+body:
+  - type: dropdown
+    id: content_type
+    attributes:
+      label: 内容类型
+      options:
+        - 20 道商业题库
+        - 四个维度定义
+        - 人格名称 / 标语
+        - 人格报告正文
+        - 行动守则 / 风险提醒
+        - 模型、隐私或免责声明
+        - 翻译 / 可访问性
+    validations:
+      required: true
+  - type: input
+    id: identifier
+    attributes:
+      label: 题号、人格代码或文件位置
+      placeholder: 例如 C07、RHDP、src/data/profiles.ts
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: 当前内容的问题
+      description: 说明歧义、价值判断、社会赞许偏差、维度混杂或不可执行之处。
+    validations:
+      required: true
+  - type: textarea
+    id: replacement
+    attributes:
+      label: 建议文案
+      description: 请提供可直接评审的替代文本。
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: 理由与验证方法
+      description: 区分事实、推测和个人偏好；如主张效度，请给出方法、样本边界与来源。
+    validations:
+      required: true
+  - type: checkboxes
+    id: content_checks
+    attributes:
+      label: 内容检查
+      options:
+        - label: 左右倾向不存在明显“正确答案”或能力高低暗示。
+          required: true
+        - label: 没有混入收入、负债、持仓或风险承受能力。
+          required: true
+        - label: 没有荐股、仓位建议、收益承诺或心理诊断。
+          required: true

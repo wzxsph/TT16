@@ -1,0 +1,71 @@
+name: Bug 报告
+description: 报告可以稳定复现的界面、接口、数据或部署问题
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请勿粘贴订单号、恢复凭证、报告 token、密钥、日志中的个人信息或尚未修复的安全漏洞。
+  - type: dropdown
+    id: surface
+    attributes:
+      label: 问题区域
+      options:
+        - 首页 / 模型说明
+        - 答题与进度恢复
+        - 付费墙 / Mock 支付
+        - 报告 / 分享卡
+        - 售后 / 报告恢复
+        - Worker API / D1
+        - 构建 / 测试 / 部署
+        - 文档 / 其他
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 实际发生了什么？
+      description: 描述可见现象，不要包含秘密或真实用户数据。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 最小复现步骤
+      placeholder: |
+        1. 打开……
+        2. 选择……
+        3. 看到……
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境
+      description: 例如 Cloudflare 沙盒 / 本地，Chrome 版本，桌面或约 390px 移动端。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏后的截图或日志
+      description: 可选；请先遮盖订单号、凭证、token、邮箱、IP 和账户信息。
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已搜索现有 Issue，没有找到相同问题。
+          required: true
+        - label: 这不是需要私密报告的安全漏洞。
+          required: true
+        - label: 内容不含密钥、凭证、真实订单或个人信息。
+          required: true

@@ -11,7 +11,7 @@
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)：社区协作约定；
 - [SECURITY.md](SECURITY.md)：漏洞报告方式。
 
-如果改动较大，建议先创建 Issue，说明问题、目标用户、拟议方案和验收方式，避免实现方向已经偏离项目边界后才进入评审。
+如果改动较大，建议先从 [Issue 模板](https://github.com/wzxsph/TT16/issues/new/choose) 创建 Issue，说明问题、目标用户、拟议方案和验收方式，避免实现方向已经偏离项目边界后才进入评审。题目、人格名称和报告文案请使用专门的“题目 / 人格内容校准”模板。
 
 ## 可参与的方向
 

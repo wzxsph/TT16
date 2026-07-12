@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞私密报告
+    url: https://github.com/wzxsph/TT16/security
+    about: 请勿公开披露漏洞；使用 Security 页面中的私密漏洞报告功能。
+  - name: 在线沙盒
+    url: https://tt16-commercial-sandbox.samsong-1a3.workers.dev
+    about: 先在当前 Cloudflare Mock 沙盒复现用户体验问题。
