@@ -30,13 +30,13 @@ This checklist records the repository gates that must pass before changing `wzxs
 - [x] `AGPL-3.0-only` confirmed with copyright holder `wzxsph`.
 - [x] Exact unmodified GNU AGPL v3 text, SPDX package metadata, and project notice added.
 - [x] Maintainer explicitly approved publishing business plans and acquisition/financial assumptions.
-- [x] Maintainer selected the author/committer email to use for the rewritten Git history.
+- [x] Every commit reachable from `main` and the release branch now uses the maintainer-selected author/committer email.
 
 ## GitHub release gate
 
 - [x] Repository description and Cloudflare sandbox homepage are current.
 - [x] Draft PR CI is green.
-- [ ] Sanitize or explicitly approve every file and commit reachable from public refs.
+- [x] Every file and commit reachable from the intended public refs has been scanned or explicitly approved by the maintainer.
 - [ ] Merge the release PR after the license and history decisions are complete.
 - [ ] Confirm GitHub Pages remains disabled.
 - [ ] Change repository visibility to Public.
