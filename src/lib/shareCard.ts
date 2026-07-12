@@ -4,7 +4,7 @@ export type ShareDimension = {
   percent: number
 }
 
-type ShareCardInput = {
+export type ShareCardInput = {
   code: string
   name: string
   tagline: string
@@ -47,6 +47,41 @@ function fitText(
     size -= 2
   }
   return size
+}
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+  maxLines: number,
+) {
+  const characters = Array.from(text.trim())
+  const lines: string[] = []
+  let line = ''
+
+  for (const character of characters) {
+    const candidate = `${line}${character}`
+    if (line && ctx.measureText(candidate).width > maxWidth) {
+      lines.push(line)
+      line = character
+      if (lines.length >= maxLines) break
+    } else {
+      line = candidate
+    }
+  }
+
+  if (lines.length < maxLines && line) lines.push(line)
+  const consumed = lines.join('').length
+  if (consumed < characters.length && lines.length > 0) {
+    let last = lines[lines.length - 1]
+    while (last && ctx.measureText(`${last}…`).width > maxWidth) last = last.slice(0, -1)
+    lines[lines.length - 1] = `${last}…`
+  }
+
+  lines.forEach((value, index) => ctx.fillText(value, x, y + index * lineHeight))
 }
 
 function drawCharacter(
@@ -134,12 +169,15 @@ function drawPortrait(
 ) {
   ctx.save()
   roundRect(ctx, x, y, size, size, size * 0.16)
+  ctx.fillStyle = '#f1edf4'
+  ctx.fill()
   ctx.clip()
-  ctx.drawImage(image, x, y, size, size)
+  const padding = size * 0.035
+  ctx.drawImage(image, x + padding, y + padding, size - padding * 2, size - padding * 2)
   ctx.restore()
 }
 
-export async function downloadShareCard(input: ShareCardInput) {
+export async function renderShareCard(input: ShareCardInput) {
   const story = input.format === 'story'
   const width = 1080
   const height = story ? 1920 : 1080
@@ -148,7 +186,7 @@ export async function downloadShareCard(input: ShareCardInput) {
   canvas.width = width
   canvas.height = height
   const ctx = canvas.getContext('2d')
-  if (!ctx) return
+  if (!ctx) return null
 
   ctx.fillStyle = '#f7f3e9'
   ctx.fillRect(0, 0, width, height)
@@ -171,34 +209,35 @@ export async function downloadShareCard(input: ShareCardInput) {
   ctx.font = '500 26px "Noto Sans SC", sans-serif'
   ctx.fillText('交易人格十六型', 202, 110)
 
-  const top = story ? 242 : 186
+  const top = story ? 230 : 176
+  const identityWidth = story ? 900 : 470
   ctx.fillStyle = colors.accent
   ctx.font = '800 64px "Avenir Next", Arial, sans-serif'
   ctx.fillText(input.code, 88, top)
 
   ctx.fillStyle = '#26343a'
-  const titleSize = fitText(ctx, input.name, 760, story ? 116 : 96, 68)
+  const titleSize = fitText(ctx, input.name, identityWidth, story ? 112 : 92, 54)
   ctx.font = `700 ${titleSize}px "Noto Serif SC", "Songti SC", serif`
   ctx.fillText(input.name, 84, top + (story ? 126 : 106))
 
   ctx.fillStyle = '#56666b'
   ctx.font = `500 ${story ? 38 : 32}px "Noto Sans SC", sans-serif`
   const taglineY = top + (story ? 205 : 170)
-  ctx.fillText(input.tagline.slice(0, 24), 88, taglineY)
+  wrapText(ctx, input.tagline, 88, taglineY, identityWidth, story ? 50 : 40, 2)
 
   if (input.imageUrl) {
     try {
       const portrait = await loadImage(input.imageUrl)
-      drawPortrait(ctx, portrait, story ? 230 : 650, story ? 510 : 244, story ? 620 : 330)
+      drawPortrait(ctx, portrait, story ? 190 : 600, story ? 500 : 138, story ? 700 : 420)
     } catch {
-      drawCharacter(ctx, story ? 540 : 785, story ? 830 : 450, story ? 1.65 : 1.08, colors.accent, colors.second)
+      drawCharacter(ctx, story ? 540 : 810, story ? 840 : 380, story ? 1.65 : 1.08, colors.accent, colors.second)
     }
   } else {
-    drawCharacter(ctx, story ? 540 : 785, story ? 830 : 450, story ? 1.65 : 1.08, colors.accent, colors.second)
+    drawCharacter(ctx, story ? 540 : 810, story ? 840 : 380, story ? 1.65 : 1.08, colors.accent, colors.second)
   }
 
   const panelX = 70
-  const panelY = story ? 1190 : 650
+  const panelY = story ? 1220 : 650
   const panelW = 940
   const panelH = story ? 480 : 326
   ctx.fillStyle = '#fffdf8'
@@ -216,7 +255,7 @@ export async function downloadShareCard(input: ShareCardInput) {
 
     const barX = panelX + (story ? 360 : 310)
     const barY = y - (story ? 25 : 18)
-    const barW = story ? 470 : 520
+    const barW = story ? 430 : 500
     const barH = story ? 24 : 18
     ctx.fillStyle = '#e9e5dc'
     roundRect(ctx, barX, barY, barW, barH, barH / 2)
@@ -241,9 +280,17 @@ export async function downloadShareCard(input: ShareCardInput) {
   } else {
     ctx.fillStyle = '#6f7a7d'
     ctx.font = '500 22px "Noto Sans SC", sans-serif'
-    ctx.fillText('20 个真实交易情境 · 匿名测试', 704, 1032)
+    ctx.textAlign = 'right'
+    ctx.fillText('20 个真实交易情境 · 本地评分', 994, 1032)
+    ctx.textAlign = 'left'
   }
 
+  return canvas
+}
+
+export async function downloadShareCard(input: ShareCardInput) {
+  const canvas = await renderShareCard(input)
+  if (!canvas) return
   const dataUrl = canvas.toDataURL('image/png', 1)
   const anchor = document.createElement('a')
   anchor.download = `TT16-${input.code}-${input.format}.png`

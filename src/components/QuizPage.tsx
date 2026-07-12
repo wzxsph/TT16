@@ -11,6 +11,7 @@ type QuizPageProps = {
   selected: number | null | undefined
   isAnswered: boolean
   answeredCount: number
+  saveStateLabel?: string
   onSelect: (value: number | null) => void
   onBack: () => void
   onNext: () => void
@@ -32,6 +33,7 @@ export function QuizPage({
   selected,
   isAnswered,
   answeredCount,
+  saveStateLabel = '进度已安全同步',
   onSelect,
   onBack,
   onNext,
@@ -60,7 +62,7 @@ export function QuizPage({
           <BrandMark size={34} />
           <span>TT16</span>
         </button>
-        <div className="quiz-save-state"><Cloud size={15} /><span>进度已安全同步</span></div>
+        <div className="quiz-save-state"><Cloud size={15} /><span>{saveStateLabel}</span></div>
         <div className="quiz-header__actions">
           <a className="source-link" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noreferrer"><GitBranch size={15} /><span>源码</span></a>
           <button className="icon-button" onClick={onExit} aria-label="关闭测试"><X size={20} /></button>

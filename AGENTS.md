@@ -12,6 +12,7 @@ TT16 is an open-source, mobile-first trading-behavior personality project. It de
 - `wrangler.commercial.jsonc`: local commercial app using local D1 and Mock payment.
 - `wrangler.sandbox.jsonc`: public Cloudflare sandbox using remote D1 and Mock payment.
 - `wrangler.commercial.production.example.jsonc`: disabled production example with placeholders; never deploy it as-is.
+- GitHub Pages: static free edition built with `npm run build:pages`; it performs client-side scoring and contains no API, order, paywall, or payment runtime.
 
 The public sandbox is not a real payment product. Keep visible sandbox disclosure on the paywall, policy dialog, README, and any promotional material. Never change Mock payment to a production environment: `paymentPolicy.ts` intentionally rejects production + Mock.
 
@@ -52,6 +53,8 @@ Run these commands before committing application changes:
 ```bash
 npm ci
 npm run build
+npm run build:pages
+npm run test:pages-build
 npm run typecheck:worker
 npm test -- --run
 npm run test:api:commercial
@@ -65,9 +68,11 @@ Documentation-only changes may skip runtime suites when they cannot affect code,
 ## Deployment
 
 - Public sandbox: `npm run deploy:sandbox`.
+- Public free edition: `.github/workflows/deploy-pages.yml` builds and deploys `https://wzxsph.github.io/TT16/` from `main`.
 - Verify after deployment: sandbox badge, `/api/health`, 20 questions, paywall non-disclosure, Mock fulfillment, refresh recovery, manual recovery, and refund request.
 - Do not deploy the production example config.
-- GitHub Pages must remain disabled unless the maintainer explicitly changes the hosting strategy. `.github/workflows/ci.yml` verifies code and must not deploy.
+- The Pages bundle must pass `npm run test:pages-build`; never add `/api/v1/`, paywall, order, recovery, support, or payment code to `FreeApp.tsx`.
+- `.github/workflows/ci.yml` verifies both commercial and Pages builds but never deploys. Only `deploy-pages.yml` may deploy Pages.
 - Never deploy from an external contributor's pull request with repository secrets.
 
 ## Public-repository hygiene

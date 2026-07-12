@@ -6,8 +6,8 @@ This checklist records the repository gates that must pass before changing `wzxs
 
 - [x] Public-facing README explains the project, idea, four dimensions, limitations, architecture, local setup, Cloudflare sandbox, and roadmap.
 - [x] README contains a reviewed open-source poster.
-- [x] README contains real Cloudflare sandbox screenshots for landing, quiz, pre-result paywall, and report.
-- [x] Full-page landing and report captures are available without credentials or account chrome.
+- [x] README presents the reviewed 16-personality contact sheet and actual square/story card exports.
+- [x] Payment UI and incomplete long screenshots are omitted from the public README gallery.
 - [x] Mock payment and non-investment-advice disclosures are prominent.
 - [x] `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `AGENTS.md`, PR template, and Issue templates exist.
 - [x] Third-party dependency licenses are summarized in `THIRD_PARTY_NOTICES.md`.
@@ -38,8 +38,8 @@ This checklist records the repository gates that must pass before changing `wzxs
 - [x] Draft PR CI is green.
 - [x] Every file and commit reachable from the intended public refs has been scanned or explicitly approved by the maintainer.
 - [x] Release PR was fast-forwarded into `main` after the license and history decisions were complete.
-- [x] GitHub Pages remains disabled.
+- [x] GitHub Pages deploys a payment-free static build with local scoring and no commercial API bundle.
 - [x] Repository visibility is Public.
 - [x] README rendering, image loading, community files, Security tab, demo URL, and CI were re-checked from the public repository.
 
-Public release completed on 2026-07-12. The Cloudflare sandbox remains explicitly configured for Mock payment and must not be treated as a real-payment production service.
+Public release completed on 2026-07-12. GitHub Pages is the free public experience. The Cloudflare sandbox remains explicitly configured for Mock payment and must not be treated as a real-payment production service.
