@@ -6,6 +6,10 @@ This file defines repository-wide rules for coding agents and automated contribu
 
 TT16 is an open-source, mobile-first trading-behavior personality project. It describes decision preferences; it does not evaluate investment skill, risk capacity, suitability, or expected returns. Every change must preserve the product's non-advisory and privacy-minimizing boundaries.
 
+## Public maintenance status
+
+The public repository is feature-frozen. Only security and dependency updates, reproducible bug fixes, corrections to existing content, accessibility, compatibility, tests, and documentation maintenance are in scope. Do not add adaptive guessing, new assessment modes, new clients, payment capabilities, or other product expansion to the public branch. In particular, the public Pages artifact must not contain `/guess/`, `tt16:guess`, or guess-specific assets.
+
 ## Product surfaces
 
 - `wrangler.jsonc`: legacy static visual demo; preserve it as a reference.

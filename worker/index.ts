@@ -396,12 +396,12 @@ async function completeSession(request: Request, env: Env, sessionId: string): P
   const now = new Date().toISOString()
   const scoreJson = JSON.stringify(score)
 
-  await env.DB.batch([
-    env.DB.prepare(
-      `INSERT INTO assessment_results
-        (id, session_id, type_code, score_json, questionnaire_version, scoring_version, content_version, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    ).bind(
+  const inserted = await env.DB.prepare(
+    `INSERT OR IGNORE INTO assessment_results
+      (id, session_id, type_code, score_json, questionnaire_version, scoring_version, content_version, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+  )
+    .bind(
       resultId,
       sessionId,
       score.typeCode,
@@ -410,16 +410,26 @@ async function completeSession(request: Request, env: Env, sessionId: string): P
       score.versions.scoring,
       score.versions.content,
       now,
-    ),
+    )
+    .run()
+
+  const canonical = await env.DB.prepare(
+    'SELECT id, session_id, type_code, score_json FROM assessment_results WHERE session_id = ?',
+  )
+    .bind(sessionId)
+    .first<ResultRow>()
+  if (!canonical) throw new ApiError(500, 'assessment_creation_failed', '报告生成失败，请稍后重试。')
+
+  await env.DB.batch([
     env.DB.prepare(
-      'INSERT INTO report_snapshots (id, result_id, content_json, created_at) VALUES (?, ?, ?, ?)',
-    ).bind(reportId, resultId, scoreJson, now),
+      'INSERT OR IGNORE INTO report_snapshots (id, result_id, content_json, created_at) VALUES (?, ?, ?, ?)',
+    ).bind(reportId, canonical.id, canonical.score_json, now),
     env.DB.prepare(
-      "UPDATE assessment_sessions SET status = 'paywalled', completed_at = ?, updated_at = ? WHERE id = ?",
+      "UPDATE assessment_sessions SET status = 'paywalled', completed_at = COALESCE(completed_at, ?), updated_at = ? WHERE id = ?",
     ).bind(now, now, sessionId),
   ])
 
-  return json(paywallPayload(resultId), 201)
+  return json(paywallPayload(canonical.id), inserted.meta.changes > 0 ? 201 : 200)
 }
 
 async function createOrder(request: Request, env: Env): Promise<Response> {

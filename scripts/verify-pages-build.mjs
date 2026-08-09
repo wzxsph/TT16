@@ -35,6 +35,12 @@ assert(javascript.includes('免费完整报告'), 'free report label is missing'
 assert(!javascript.includes('/api/v1/'), 'an API endpoint was bundled into the static edition')
 assert(!javascript.includes('mock-confirm'), 'Mock payment code was bundled into the static edition')
 assert(!javascript.includes('立即解锁 ¥4.9'), 'paywall UI was bundled into the static edition')
+assert(!javascript.includes('/guess/'), 'the private guess route was bundled into the maintained public edition')
+assert(!javascript.includes('tt16:guess'), 'private guess-session storage was bundled into the public edition')
+assert(
+  !files.some((file) => relative(dist.pathname, file).split('/').includes('guess')),
+  'a private guess artifact was emitted by the public build',
+)
 
 for (const code of [
   'RHDP', 'RHDF', 'RHAP', 'RHAF',
@@ -47,5 +53,5 @@ for (const code of [
 }
 
 console.log(
-  `GitHub Pages free build verified: ${files.length} files, no API or payment bundle (${relative(root.pathname, indexPath)}).`,
+  `GitHub Pages free build verified: ${files.length} files, no API, payment, or private guess bundle (${relative(root.pathname, indexPath)}).`,
 )
