@@ -1,0 +1,25 @@
+{
+  "name": "@tt16/web",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/build.mjs production",
+    "build:pages": "node scripts/build.mjs pages",
+    "preview": "vite preview --outDir ../../dist/web",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tt16/core": "file:../../packages/core",
+    "lucide-react": "1.24.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.5",
+    "vite": "8.2.1"
+  }
+}

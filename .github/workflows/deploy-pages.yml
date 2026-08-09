@@ -1,4 +1,4 @@
-name: Deploy free edition to GitHub Pages
+name: Deploy free mirror to GitHub Pages
 
 on:
   push:
@@ -17,7 +17,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    env:
+      TT16_SITE_URL: ${{ vars.TT16_SITE_URL || 'https://wzxsph.github.io/TT16/' }}
+      TT16_ADS_ENABLED: "false"
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -31,10 +34,10 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Build static free edition
+      - name: Build static mirror
         run: npm run build:pages
 
-      - name: Verify payment-free artifact
+      - name: Verify routes, canonical and free-only artifact
         run: npm run test:pages-build
 
       - name: Configure Pages
@@ -43,7 +46,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: dist/pages
 
   deploy:
     environment:

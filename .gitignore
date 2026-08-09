@@ -7,6 +7,11 @@ dist
 *.local
 *.log
 coverage
+playwright-report
+test-results
+*.tsbuildinfo
 backups/
+apps/weapp/project.private.config.json
+apps/weapp/.swc/
 .DS_Store
 参考图.png

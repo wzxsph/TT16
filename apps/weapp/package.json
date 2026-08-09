@@ -1,0 +1,29 @@
+{
+  "name": "@tt16/weapp",
+  "private": true,
+  "version": "2.0.0",
+  "scripts": {
+    "prebuild": "npm run build -w @tt16/core",
+    "dev": "node scripts/taro-build.mjs --watch",
+    "build": "node scripts/taro-build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tarojs/components": "4.2.1",
+    "@tarojs/helper": "4.2.1",
+    "@tarojs/plugin-framework-react": "4.2.1",
+    "@tarojs/plugin-platform-weapp": "4.2.1",
+    "@tarojs/react": "4.2.1",
+    "@tarojs/runtime": "4.2.1",
+    "@tarojs/taro": "4.2.1",
+    "@tt16/core": "file:../../packages/core",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "7.29.7",
+    "@tarojs/service": "4.2.1",
+    "@types/react": "18.3.28",
+    "babel-preset-taro": "4.2.1"
+  }
+}

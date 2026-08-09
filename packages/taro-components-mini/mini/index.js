@@ -1,0 +1,6 @@
+export const View = 'view'
+export const Text = 'text'
+export const Button = 'button'
+export const Image = 'image'
+export const Picker = 'picker'
+export const Canvas = 'canvas'

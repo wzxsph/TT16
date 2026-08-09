@@ -28,8 +28,8 @@ body:
       label: 是否需要新增数据？
       options:
         - 不需要
+        - 只使用当前设备本地状态
         - 仅新增匿名、白名单事件字段
-        - 需要新增 D1 数据结构
         - 不确定，需要先做隐私评估
     validations:
       required: true
@@ -42,5 +42,7 @@ body:
           required: true
         - label: 建议不会要求券商账号、持仓、收入、负债或真实支付资料。
           required: true
-        - label: 建议不会在付费前泄露人格结果。
+        - label: 建议不会引入订单、支付、付费材料或观看广告解锁。
+          required: true
+        - label: 建议不会把答案或私人结果发送到统计、广告、URL 或后端。
           required: true

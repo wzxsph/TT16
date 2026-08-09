@@ -1,0 +1,7 @@
+{
+  "description": "复制为 project.private.config.json 后填写开发者工具本机设置；不要提交真实 AppID、广告位或私有路径。",
+  "projectname": "tt16-free-growth-v2-local",
+  "setting": {
+    "compileHotReLoad": true
+  }
+}

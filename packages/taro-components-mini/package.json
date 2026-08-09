@@ -1,0 +1,23 @@
+{
+  "name": "@tarojs/components",
+  "version": "4.2.1",
+  "private": true,
+  "type": "module",
+  "description": "TT16 mini-program-only facade for the Taro 4.2.1 native component entry.",
+  "main": "mini/index.js",
+  "module": "mini/index.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./mini/index.js",
+      "default": "./mini/index.js"
+    },
+    "./mini": {
+      "types": "./types/index.d.ts",
+      "import": "./mini/index.js",
+      "default": "./mini/index.js"
+    },
+    "./types/*": "./types/compat.d.ts"
+  }
+}

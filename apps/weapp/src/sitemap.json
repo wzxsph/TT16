@@ -1,0 +1,7 @@
+{
+  "desc": "TT16 公开内容可被微信索引；个人本地结果页不可索引。",
+  "rules": [
+    { "action": "disallow", "page": "pages/result/index" },
+    { "action": "allow", "page": "*" }
+  ]
+}
