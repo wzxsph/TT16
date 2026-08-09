@@ -1,0 +1,7 @@
+{
+  "name": "html-minifier",
+  "version": "4.0.1",
+  "private": true,
+  "main": "index.cjs",
+  "description": "Small synchronous XML whitespace minifier for the Taro mini-program emitter."
+}

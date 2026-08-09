@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "tt16-commercial-sandbox",
+  "main": "index.js",
+  "compatibility_date": "2026-08-09",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "FREE_SITE_URL": "https://wzxsph.github.io/TT16/"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.01
+  }
+}

@@ -1,0 +1,39 @@
+name: Retire legacy commercial sandbox
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retired-sandbox
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment: retired-sandbox
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Verify retirement behavior locally
+        run: node scripts/verify-retired-sandbox.mjs
+
+      - name: Deploy no-binding retirement Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config ops/retired-sandbox/wrangler.jsonc --var FREE_SITE_URL:${{ vars.TT16_SITE_URL }}
+
+      - name: Verify API retirement and page redirect
+        env:
+          RETIRED_HOST: ${{ vars.TT16_RETIRED_HOST }}
+          FREE_SITE_URL: ${{ vars.TT16_SITE_URL }}
+        run: |
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' "${RETIRED_HOST}/api/v1/health")" = "410"
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' "${RETIRED_HOST}/")" = "308"
+          test "$(curl --silent --head "${RETIRED_HOST}/" | tr -d '\r' | grep -i '^location:' | cut -d' ' -f2-)" = "$FREE_SITE_URL"

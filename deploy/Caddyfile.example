@@ -1,0 +1,41 @@
+{
+  email {$ACME_EMAIL}
+  admin off
+}
+
+www.{$TT16_DOMAIN} {
+  redir https://{$TT16_DOMAIN}{uri} permanent
+}
+
+{$TT16_DOMAIN} {
+  encode zstd gzip
+
+  handle /gc/count {
+    rewrite * /count
+    reverse_proxy 127.0.0.1:8081
+  }
+
+  handle /healthz {
+    respond "ok" 200
+  }
+
+  handle {
+    root * /srv/tt16/current
+    try_files {path} {path}/index.html
+    file_server
+  }
+
+  @immutable path /assets/* /images/og/* /images/personalities-v2/*
+  header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Cross-Origin-Opener-Policy "same-origin"
+    Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
+    -Server
+  }
+}

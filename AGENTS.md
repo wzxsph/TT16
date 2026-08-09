@@ -4,100 +4,88 @@ This file defines repository-wide rules for coding agents and automated contribu
 
 ## Repository purpose
 
-TT16 is an open-source, mobile-first trading-behavior personality project. It describes decision preferences; it does not evaluate investment skill, risk capacity, suitability, or expected returns. Every change must preserve the product's non-advisory and privacy-minimizing boundaries.
+TT16 is an open-source, mobile-first trading-behavior personality atlas and assessment. It describes decision preferences; it does not evaluate investment skill, risk capacity, suitability, or expected returns. Every change must preserve the product's non-advisory and privacy-minimizing boundaries.
 
 ## Product surfaces
 
-- `wrangler.jsonc`: legacy static visual demo; preserve it as a reference.
-- `wrangler.commercial.jsonc`: local commercial app using local D1 and Mock payment.
-- `wrangler.sandbox.jsonc`: public Cloudflare sandbox using remote D1 and Mock payment.
-- `wrangler.commercial.production.example.jsonc`: disabled production example with placeholders; never deploy it as-is.
-- GitHub Pages: static free edition built with `npm run build:pages`; it performs client-side scoring and contains no API, order, paywall, or payment runtime.
+- `apps/web`: the only Web application; React 19, Vite, local scoring, and static prerendering.
+- `apps/weapp`: the Taro 4.2.1 / React 18 WeChat mini program; local scoring and local storage.
+- `packages/core`: platform-independent questions, scoring, profiles, comparison, storage migration, and share-card models.
+- GitHub Pages: the `/TT16/` static mirror built with `npm run build:pages`.
+- `deploy/`: the not-yet-provisioned Hong Kong static-site and self-hosted analytics target.
+- `ops/retired-sandbox`: a no-binding Worker that redirects pages and returns `410 Gone` for every `/api/*` request.
+- `wrangler.jsonc`: a legacy static visual reference. Preserve it; it is not a product runtime.
 
-The public sandbox is not a real payment product. Keep visible sandbox disclosure on the paywall, policy dialog, README, and any promotional material. Never change Mock payment to a production environment: `paymentPolicy.ts` intentionally rejects production + Mock.
+The repository has no production business API, database binding, order, payment, entitlement, refund, recovery, support, or paid-content runtime.
 
 ## Required invariants
 
-1. The Worker is authoritative for commercial scoring, price, order, entitlement, refund, and report delivery.
-2. Before entitlement, no API response may contain `typeCode`, profile name, dimensions, pressure scores, report text, family color, or a result-specific asset path.
-3. One result and SKU may create only one order; one order may create only one entitlement.
-4. Recovery and order authorization must use the matching high-entropy recovery credential and return non-enumerating errors.
-5. Report tokens must use cryptographic randomness and be stored only as hashes.
-6. Refund completion must revoke the entitlement and every active report token.
-7. Never add client-controlled amount, SKU, score, type, payment-success, or entitlement fields.
-8. Never store payment secrets, recovery credentials, private keys, personal financial data, or raw sensitive input in Git, `VITE_*`, events, logs, screenshots, fixtures, or support cases.
-9. Do not collect broker credentials, holdings, income, debt, or risk-capacity data for personality scoring.
-10. UI and content must not recommend securities, imply profit, rank types by ability, or present the result as a psychological diagnosis.
+1. Assessment answers, progress, scoring, and reports stay on the current device. No answer or result may be sent to TT16 analytics, advertising, URLs, logs, or support channels.
+2. All questions, reports, guides, printable sheets, comparisons, and share materials remain free. Never add payment, order, paywall, entitlement, rewarded unlock, or paid-material code.
+3. Ads default to disabled. They may only use `atlas_mid`, `type_detail_end`, `compare_end`, or `tool_end`; never place ads in the home hero, assessment, processing state, report core, or share card.
+4. Analytics is opt-in, respects DNT and local decline, has no persistent visitor ID, and only emits page/source plus the six fixed events in `apps/web/src/lib/analytics.ts`.
+5. Result URLs, analytics, Open Graph metadata, and event names must not contain answers, dimension percentages, private-result payloads, or user identifiers. A share action may link to the matching public type page, whose code and copy are public.
+6. Type comparisons are neutral. Never add compatibility scores, best matches, ability rankings, expected returns, security recommendations, or suitability claims.
+7. Do not collect broker credentials, holdings, transactions, income, debt, identity details, or risk-capacity data for personality scoring.
+8. UI and content must not recommend securities, imply profit, rank types by ability, or present a result as a psychological diagnosis.
+9. Real AppIDs, ad-unit IDs, server IP addresses, SSH keys, analytics credentials, and other private configuration must never be committed or exposed through public build variables. Canonical site URLs are public once built.
+10. The retired Worker must have no D1 binding or access. Preserve existing remote D1 data; do not delete it.
+11. Adaptive guess traces, candidate weights, confirmations, and rejected types stay local and must not enter analytics. The 400 ms transition is interaction pacing, not a security or anti-abuse control.
 
 ## Working method
 
 - Inspect `git status` before editing and preserve unrelated or user-owned changes.
 - Prefer a focused branch and small, reviewable commits.
-- Use existing types, design tokens, components, and scripts before adding new abstractions.
-- Do not modify generated assets by hand when a source asset or preparation script exists.
-- Keep public documentation aligned with the deployed sandbox and current code; do not claim unfinished production capabilities.
-- Conventional public files are `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, and `CODE_OF_CONDUCT.md`.
+- Reuse `packages/core`, existing types, design tokens, components, and asset scripts before adding abstractions.
+- Do not modify generated assets by hand when a source master or preparation script exists.
+- Distinguish implemented behavior, disabled capability, and external-release prerequisites in public documentation.
+- Keep `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, Issue templates, workflows, and code behavior aligned.
 
-## Database changes
+## Core and content changes
 
-- Add a new numbered SQL migration; never rewrite a migration that may have reached remote D1.
-- Keep migrations backward compatible with the currently deployed Worker whenever possible.
-- Apply locally before testing, then apply to sandbox explicitly with `npm run db:migrate:sandbox`.
-- Production D1 must be separate from sandbox D1.
-- Never commit database dumps, `.wrangler/`, local backups, or real session/order/report data.
+- Keep question/scoring versions at `tt16-q20-1.0.0` / `tt16-score20-1.0.0` unless a separately reviewed model change intentionally versions both behavior and migration.
+- `ProfileV2` content must retain its fixed shape and pair strengths with observable overuse failure modes.
+- Compute adjacent types by four-letter Hamming distance; do not hand-maintain relationships.
+- Keep `packages/core` independent of React, DOM, browser storage, Canvas, and WeChat APIs.
+- Preserve safe migration from `tt16:free:v1` to `tt16:assessment:v2`; malformed state must fail closed without uploading data.
+- Keep adaptive guessing separately versioned at `tt16-guess-items-1.0.0` / `tt16-guess-policy-1.0.0`; it must not write `tt16:assessment:v2` or produce a formal report.
+- Adaptive question changes must preserve the 200-item distribution, content checks, deterministic replay, controlled-repeat rules, and local-only storage migration.
 
 ## Quality gate
 
-Run these commands before committing application changes:
+Run before committing application changes:
 
 ```bash
 npm ci
-npm run build
-npm run build:pages
-npm run test:pages-build
-npm run typecheck:worker
-npm test -- --run
-npm run test:api:commercial
-npm audit --audit-level=high
+npm run quality
 ```
 
-The API acceptance suite must continue covering paywall non-disclosure, concurrent completion/order/payment idempotency, report recovery, support authorization, refund state, and token revocation.
+The gate covers workspace type checks, core tests, content structure, both Web builds, prerender metadata, Playwright desktop/390px flows, WeChat build and sensitive-string scan, retired Worker behavior, local links, high-severity dependency audit, and `git diff --check`.
 
-Documentation-only changes may skip runtime suites when they cannot affect code, but must still verify Markdown links, image paths, spelling, and `git diff --check`.
+Documentation-only changes may skip runtime suites only when they cannot affect code, but must still run `npm run test:links` and `git diff --check`.
 
 ## Deployment
 
-- Public sandbox: `npm run deploy:sandbox`.
-- Public free edition: `.github/workflows/deploy-pages.yml` builds and deploys `https://wzxsph.github.io/TT16/` from `main`.
-- Verify after deployment: sandbox badge, `/api/health`, 20 questions, paywall non-disclosure, Mock fulfillment, refresh recovery, manual recovery, and refund request.
-- Do not deploy the production example config.
-- The Pages bundle must pass `npm run test:pages-build`; never add `/api/v1/`, paywall, order, recovery, support, or payment code to `FreeApp.tsx`.
-- `.github/workflows/ci.yml` verifies both commercial and Pages builds but never deploys. Only `deploy-pages.yml` may deploy Pages.
-- Never deploy from an external contributor's pull request with repository secrets.
+- GitHub Pages: `.github/workflows/deploy-pages.yml` is the only automatic public deployment.
+- Hong Kong main site: `.github/workflows/deploy-hk.yml` is manual and requires protected environment secrets. It uploads a versioned release and atomically switches the `current` symlink.
+- WeChat: CI builds but never publishes. Release only after WeChat DevTools manual checks and maintainer-supplied private AppID configuration.
+- Retired sandbox: deploy `ops/retired-sandbox/wrangler.jsonc` explicitly after the free main site is live. Verify all old API paths return 410.
+- Never enable analytics or ads merely because a build succeeds. Each requires its separate external configuration and privacy review.
 
 ## Public-repository hygiene
 
-- Treat every tracked file, commit message, branch, PR, issue, artifact, and screenshot as public.
-- Run secret and personal-data checks before pushing. D1 IDs are resource identifiers, not credentials, but should still be replaced by contributors deploying to their own accounts.
-- Do not publish internal budgets, acquisition strategy, private operational notes, user data, or real commercial records without an explicit maintainer decision.
-- Screenshots must come from a controlled demo session and must not show order IDs, recovery credentials, report tokens, emails, IP addresses, logs, or browser/account chrome.
+- Treat every tracked file, commit, branch, PR, issue, artifact, and screenshot as public.
+- Run secret and personal-data checks before pushing. Do not publish internal budgets, private acquisition notes, user data, or operational credentials.
+- Screenshots must come from controlled local/demo state and show no IDs, emails, IP addresses, account chrome, logs, or private configuration.
 - Do not add a license, change the SPDX identifier, or relicense code/assets without explicit maintainer confirmation.
 
 ## Assets and user files
 
-- Preserve `design/personality-masters*` and `public/images/personalities-v2` as versioned visual assets.
-- `docs/images/` contains README marketing material and verified product screenshots. Keep source names stable when referenced by README.
+- Preserve `design/personality-masters*` and `public/images/personalities-v2` as versioned assets.
+- `docs/images/` contains reviewed marketing material; keep referenced names stable.
 - `参考图.png` is a user-provided local reference. Do not modify, delete, stage, or commit it unless the maintainer explicitly requests publication of that exact file.
-- Generated visuals must be reviewed for text accuracy, non-advisory claims, and consistency with the TT16 low-poly style before being committed.
-
-## Documentation and content
-
-- Use plain language and explain acronyms on first use.
-- Distinguish implemented behavior, sandbox behavior, and roadmap ideas.
-- Keep Mock payment disclosure prominent anywhere price or checkout is shown.
-- Profile copy should pair strengths with failure modes and end in observable actions.
-- Cite authoritative sources for legal, security, financial, or behavioral-science claims; avoid unsupported validation claims.
+- Review generated visuals for text accuracy, disclaimers, cropping, and the TT16 low-poly style before committing.
 
 ## Security reporting
 
-Do not open a public issue for a suspected vulnerability. Follow `SECURITY.md`, avoid reproducing attacks against the public sandbox, and include only the minimum proof needed for maintainers to reproduce safely.
+Do not open a public issue for a suspected vulnerability. Follow `SECURITY.md`, avoid destructive testing against public deployments, and include only the minimum proof needed for maintainers to reproduce safely.

@@ -1,45 +1,57 @@
-# TT16 Public Release Checklist
+# TT16 免费增长版 v2 发布检查单
 
-This checklist records the repository gates that must pass before changing `wzxsph/TT16` from Private to Public.
+此清单区分仓库实现与需要维护者外部资源的正式发布。不要把“代码已准备”写成“线上已完成”。
 
-## Content and presentation
+## 仓库与内容
 
-- [x] Public-facing README explains the project, idea, four dimensions, limitations, architecture, local setup, Cloudflare sandbox, and roadmap.
-- [x] README contains a reviewed open-source poster.
-- [x] README presents the reviewed 16-personality contact sheet and actual square/story card exports.
-- [x] Payment UI and incomplete long screenshots are omitted from the public README gallery.
-- [x] Mock payment and non-investment-advice disclosures are prominent.
-- [x] `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `AGENTS.md`, PR template, and Issue templates exist.
-- [x] Third-party dependency licenses are summarized in `THIRD_PARTY_NOTICES.md`.
-- [x] `CODEOWNERS` protects scoring, Worker, migration, payment, security, and license boundaries.
-- [x] Dependabot is configured for npm and GitHub Actions updates.
+- [ ] 20 题、200 条快速猜型题、16 型、4 族群、4 维度、6 指南、复盘工具和中性对照通过内容检查；
+- [ ] 16 张 WebP、17 张 1200×630 Open Graph 图、16 个 A4 页面和两种分享卡逐一完成文字/裁切/免责声明检查；
+- [ ] README、AGENTS、CONTRIBUTING、SECURITY、Issue/PR 模板和第三方声明与免费产品一致；
+- [ ] 仓库不包含订单、支付、权益、退款、恢复、售后、D1 绑定或付费材料运行时；
+- [ ] `参考图.png` 保持未跟踪、未修改、未发布。
 
-## Code and security
+## 质量门
 
-- [x] Production build passes.
-- [x] Worker typecheck passes.
-- [x] Unit tests pass.
-- [x] Local commercial API acceptance passes.
-- [x] `npm audit --audit-level=high` reports no vulnerabilities.
-- [x] Working-tree and Git-history pattern scans found no API keys, private keys, payment secrets, or recovery credentials.
-- [x] User-provided `参考图.png` remains untracked.
-- [x] GitHub private vulnerability reporting is enabled.
+- [ ] `npm ci` 可从干净环境复现；
+- [ ] `npm run quality` 全部通过；
+- [ ] `npm audit --audit-level=high` 为 0 个 high/critical；
+- [ ] Web 58 个静态路由、唯一 metadata、canonical、站点地图、noindex、懒加载与打印布局通过；
+- [ ] Playwright 在桌面与 390px 完成标准答题、快速猜型、刷新恢复、撤销、猜中/猜错、报告、分享、图鉴、对照、复盘、打印、键盘和无第三方请求检查；
+- [ ] Taro 微信构建、主包体积、内容分包与敏感字符串扫描通过；
+- [ ] 退休入口普通页面 308、全部 `/api/*` 410 的测试通过。
 
-## Maintainer decisions required
+## GitHub Pages 镜像
 
-- [x] `AGPL-3.0-only` confirmed with copyright holder `wzxsph`.
-- [x] Exact unmodified GNU AGPL v3 text, SPDX package metadata, and project notice added.
-- [x] Maintainer explicitly approved publishing business plans and acquisition/financial assumptions.
-- [x] Every commit reachable from `main` and the release branch now uses the maintainer-selected author/committer email.
+- [ ] `main` 的 Pages 工作流成功部署 `dist/pages`；
+- [ ] `/TT16/` 资源路径、20 题、本地结果、分享卡和公开路由线上复核；
+- [ ] `/TT16/guess/` 动态选题、恢复、娱乐结果卡与转标准测试线上复核；
+- [ ] 自有域名上线前 canonical 指向镜像；上线后仓库变量改为主站 apex。
 
-## GitHub release gate
+## 香港主站（需要外部资源）
 
-- [x] Repository description and Cloudflare sandbox homepage are current.
-- [x] Draft PR CI is green.
-- [x] Every file and commit reachable from the intended public refs has been scanned or explicitly approved by the maintainer.
-- [x] Release PR was fast-forwarded into `main` after the license and history decisions were complete.
-- [x] GitHub Pages deploys a payment-free static build with local scoring and no commercial API bundle.
-- [x] Repository visibility is Public.
-- [x] README rendering, image loading, community files, Security tab, demo URL, and CI were re-checked from the public repository.
+- [ ] 域名、香港服务器与受保护 GitHub Environment 已由维护者提供；
+- [ ] Caddy 自动 HTTPS、apex canonical、`www` 308、安全头和 `/healthz` 验证；
+- [ ] 受限 SSH 用户、host key 固定、版本目录和原子切换/回滚演练完成；
+- [ ] 移动、联通、电信跨境访问分别实测，不宣传未经验证的大陆加速能力。
 
-Public release completed on 2026-07-12. GitHub Pages is the free public experience. The Cloudflare sandbox remains explicitly configured for Mock payment and must not be treated as a real-payment production service.
+## 匿名统计（主站稳定后）
+
+- [ ] GoatCounter 自托管实例只通过同源 `/gc/count` 接收计数；
+- [ ] 关闭单次明细、位置、浏览器、系统和屏幕维度；
+- [ ] 拒绝、DNT、无端点三种状态均无请求；
+- [ ] 同意状态只产生页面/来源和六个固定事件，不含答案、结果、ID 或自由文本；
+- [ ] 测试数据清除并更新线上隐私说明。
+
+## 微信小程序（需要外部资源）
+
+- [ ] 真实 AppID 通过私有配置提供且未提交；
+- [ ] 按 [WEAPP_RELEASE_CHECKLIST.md](WEAPP_RELEASE_CHECKLIST.md) 完成开发者工具与真机人工验收；
+- [ ] 平台隐私声明、版本描述、分享路径和清除数据行为通过审核；
+- [ ] 广告仍关闭。
+
+## 旧沙盒退休
+
+- [ ] 免费主站已稳定后，手动运行退休 Worker 工作流；
+- [ ] Worker 配置没有 D1 绑定且不访问保留数据；
+- [ ] 普通旧链接 308 到免费主站，所有历史 `/api/*` 返回 410；
+- [ ] 既有 D1 资源保留，不执行删除。

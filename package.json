@@ -1,9 +1,9 @@
 {
-  "name": "tt16-commercial",
+  "name": "tt16",
   "private": true,
-  "version": "1.1.0",
+  "version": "2.0.0",
   "license": "AGPL-3.0-only",
-  "description": "Open-source trading-behavior personality experience with a free static edition and a Cloudflare commercial sandbox.",
+  "description": "Open-source, local-first trading-behavior personality atlas and assessment.",
   "homepage": "https://wzxsph.github.io/TT16/",
   "repository": {
     "type": "git",
@@ -16,41 +16,48 @@
     "node": ">=22"
   },
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "dev:commercial": "npm run build && wrangler dev --config wrangler.commercial.jsonc --local",
-    "build": "tsc -b && vite build",
-    "build:pages": "tsc -b && vite build --mode pages",
-    "typecheck:worker": "tsc -p tsconfig.worker.json",
-    "db:migrate:local": "wrangler d1 migrations apply tt16-commercial --local --config wrangler.commercial.jsonc",
-    "db:migrate:sandbox": "wrangler d1 migrations apply tt16-commercial-sandbox --remote --config wrangler.sandbox.jsonc",
-    "assets:personalities": "node scripts/prepare-personality-assets.mjs",
-    "assets:personalities:v2": "node scripts/prepare-personality-assets.mjs --v2",
-    "preview": "vite preview",
-    "preview:pages": "vite preview --base=/TT16/",
-    "test": "vitest run",
-    "test:api:commercial": "npm run db:migrate:local && node scripts/verify-commercial-api.mjs",
-    "test:api:sandbox": "COMMERCIAL_BASE_URL=https://tt16-commercial-sandbox.samsong-1a3.workers.dev node scripts/verify-commercial-api.mjs",
-    "test:pages-build": "node scripts/verify-pages-build.mjs",
-    "test:watch": "vitest",
-    "deploy:demo": "npm run build && wrangler deploy",
-    "deploy:sandbox": "npm run build && npm run db:migrate:sandbox && wrangler deploy --config wrangler.sandbox.jsonc",
-    "tail:sandbox": "wrangler tail tt16-commercial-sandbox --config wrangler.sandbox.jsonc"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "overrides": {
+    "serialize-javascript": "7.1.0"
   },
-  "dependencies": {
-    "lucide-react": "1.24.0",
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+  "scripts": {
+    "dev": "npm run dev -w @tt16/web",
+    "build": "npm run build -w @tt16/web",
+    "build:pages": "npm run build:pages -w @tt16/web",
+    "build:weapp": "npm run build -w @tt16/weapp",
+    "preview": "npm run preview -w @tt16/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run packages/core/test",
+    "test:content": "npm run build -w @tt16/core && node scripts/check-content.mjs",
+    "test:web-build": "node scripts/verify-web-build.mjs dist/web",
+    "test:pages-build": "node scripts/verify-web-build.mjs dist/pages /TT16/",
+    "test:weapp-build": "node scripts/verify-weapp-build.mjs",
+    "test:retired-sandbox": "node scripts/verify-retired-sandbox.mjs",
+    "test:e2e": "playwright test",
+    "test:links": "node scripts/check-links.mjs",
+    "assets:personalities": "node scripts/prepare-personality-assets.mjs --v2",
+    "assets:free-kit": "node --experimental-strip-types scripts/generate-free-assets.ts",
+    "audit:high": "npm audit --audit-level=high",
+    "quality": "npm run typecheck && npm test -- --run && npm run test:content && npm run build && npm run test:web-build && npm run build:pages && npm run test:pages-build && npm run test:e2e && npm run build:weapp && npm run test:weapp-build && npm run test:retired-sandbox && npm run test:links && npm run audit:high && git diff --check"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260711.1",
-    "@types/react": "19.2.17",
-    "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.3",
-    "sharp": "0.34.5",
+    "@babel/core": "7.29.7",
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.62.1",
+    "@tarojs/components": "file:packages/taro-components-mini",
+    "@tarojs/runtime": "4.2.1",
+    "@tarojs/taro-loader": "4.2.1",
+    "@tarojs/webpack5-runner": "4.2.1",
+    "@types/node": "24.3.0",
+    "@types/react": "18.3.28",
+    "@types/react-dom": "18.3.7",
+    "sass": "1.102.0",
+    "sharp": "0.35.3",
     "typescript": "7.0.2",
-    "vite": "8.1.4",
     "vitest": "4.1.10",
-    "wrangler": "4.110.0"
+    "webpack": "5.91.0"
   }
 }

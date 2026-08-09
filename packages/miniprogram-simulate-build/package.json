@@ -1,0 +1,7 @@
+{
+  "name": "miniprogram-simulate",
+  "version": "1.6.2",
+  "private": true,
+  "main": "index.cjs",
+  "description": "Dependency-free placeholder for the test-only simulator bundled by Taro's production runner."
+}

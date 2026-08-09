@@ -1,0 +1,22 @@
+[Unit]
+Description=TT16 self-hosted GoatCounter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=goatcounter
+Group=goatcounter
+StateDirectory=goatcounter
+WorkingDirectory=/var/lib/goatcounter
+ExecStart=/usr/local/bin/goatcounter serve -listen=127.0.0.1:8081 -automigrate
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/goatcounter
+
+[Install]
+WantedBy=multi-user.target
